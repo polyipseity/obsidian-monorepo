@@ -2,3 +2,7 @@
 	path = obsidian-api
 	url = ../obsidian-api.git
 	branch = main
+[submodule "obsidian-terminal"]
+	path = obsidian-terminal
+	url = ../obsidian-terminal.git
+	branch = main
