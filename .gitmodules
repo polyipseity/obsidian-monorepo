@@ -2,6 +2,10 @@
 	path = obsidian-api
 	url = ../obsidian-api.git
 	branch = main
+[submodule "obsidian-plugin-template"]
+	path = obsidian-plugin-template
+	url = ../obsidian-plugin-template.git
+	branch = main
 [submodule "obsidian-terminal"]
 	path = obsidian-terminal
 	url = ../obsidian-terminal.git
