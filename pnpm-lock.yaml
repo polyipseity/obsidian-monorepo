@@ -78,7 +78,7 @@ importers:
         version: 2.3.0
       obsidian:
         specifier: ^1.2.5
-        version: link:../obsidian-terminal/build/obsidian-plugin-library/build/obsidian
+        version: link:../obsidian-api
       p-lazy:
         specifier: ^4.0.0
         version: 4.0.0
@@ -139,7 +139,7 @@ importers:
         version: 0.17.19
       esbuild-compress:
         specifier: ^1.1.5
-        version: link:../obsidian-terminal/build/obsidian-plugin-library/build/esbuild-compress
+        version: link:../build/esbuild-compress
       esbuild-node-externals:
         specifier: ^1.7.0
         version: 1.7.0(esbuild@0.17.19)
@@ -177,43 +177,6 @@ importers:
         specifier: ^0.3.25
         version: 0.3.25(svelte@3.59.1)(typescript@5.0.4)
 
-  obsidian-plugin-library/build/esbuild-compress:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.1.4
-        version: 20.1.4
-
-  obsidian-plugin-library/build/obsidian:
-    dependencies:
-      '@codemirror/state':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@codemirror/view':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@types/codemirror':
-        specifier: 0.0.108
-        version: 0.0.108
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
-
   obsidian-plugin-template:
     dependencies:
       i18next:
@@ -224,10 +187,10 @@ importers:
         version: 4.17.21
       obsidian:
         specifier: ^1.2.5
-        version: link:../obsidian-terminal/build/obsidian-plugin-library/build/obsidian
+        version: link:../obsidian-api
       obsidian-plugin-library:
         specifier: ^1.0.8
-        version: link:../obsidian-terminal/build/obsidian-plugin-library
+        version: link:../obsidian-plugin-library
       semver:
         specifier: ^7.5.0
         version: 7.5.0
@@ -273,7 +236,7 @@ importers:
         version: 0.17.19
       esbuild-compress:
         specifier: ^1.1.5
-        version: link:../obsidian-terminal/build/obsidian-plugin-library/build/esbuild-compress
+        version: link:../build/esbuild-compress
       esbuild-svelte:
         specifier: ^0.7.3
         version: 0.7.3(esbuild@0.17.19)(svelte@3.59.1)
@@ -307,198 +270,6 @@ importers:
       typescript-svelte-plugin:
         specifier: ^0.3.25
         version: 0.3.25(svelte@3.59.1)(typescript@5.0.4)
-
-  obsidian-plugin-template/build/esbuild-compress:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.1.4
-        version: 20.1.4
-
-  obsidian-plugin-template/build/obsidian-plugin-library:
-    dependencies:
-      '@capacitor/filesystem':
-        specifier: ^5.0.2
-        version: 5.0.2(@capacitor/core@5.0.3)
-      async-lock:
-        specifier: ^1.4.0
-        version: 1.4.0
-      browser-util-inspect:
-        specifier: ^0.2.0
-        version: 0.2.0
-      deep-equal:
-        specifier: ^2.2.1
-        version: 2.2.1
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
-      i18next:
-        specifier: ^22.4.15
-        version: 22.4.15
-      i18next-resources-to-backend:
-        specifier: ^1.1.3
-        version: 1.1.3
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lucide:
-        specifier: ^0.216.0
-        version: 0.216.0
-      monkey-around:
-        specifier: ^2.3.0
-        version: 2.3.0
-      obsidian:
-        specifier: ^1.2.5
-        version: link:../../../obsidian-terminal/build/obsidian-plugin-library/build/obsidian
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-      semver:
-        specifier: ^7.5.0
-        version: 7.5.0
-      ts-deepmerge:
-        specifier: ^6.0.3
-        version: 6.0.3
-      ts-essentials:
-        specifier: ^9.3.2
-        version: 9.3.2(typescript@5.0.4)
-    devDependencies:
-      '@tsconfig/esm':
-        specifier: ^1.0.3
-        version: 1.0.3
-      '@tsconfig/node16':
-        specifier: ^1.0.4
-        version: 1.0.4
-      '@tsconfig/recommended':
-        specifier: ^1.0.2
-        version: 1.0.2
-      '@tsconfig/strictest':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@types/async-lock':
-        specifier: ^1.4.0
-        version: 1.4.0
-      '@types/browser-util-inspect':
-        specifier: ^0.2.0
-        version: 0.2.0
-      '@types/deep-equal':
-        specifier: ^1.0.1
-        version: 1.0.1
-      '@types/file-saver':
-        specifier: ^2.0.5
-        version: 2.0.5
-      '@types/lodash-es':
-        specifier: ^4.17.7
-        version: 4.17.7
-      '@types/node':
-        specifier: ^16.18.30
-        version: 16.18.30
-      '@types/semver':
-        specifier: ^7.5.0
-        version: 7.5.0
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^5.59.5
-        version: 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.40.0)(typescript@5.0.4)
-      '@typescript-eslint/parser':
-        specifier: ^5.59.5
-        version: 5.59.5(eslint@8.40.0)(typescript@5.0.4)
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      esbuild-compress:
-        specifier: ^1.1.5
-        version: link:../../../obsidian-terminal/build/obsidian-plugin-library/build/esbuild-compress
-      esbuild-node-externals:
-        specifier: ^1.7.0
-        version: 1.7.0(esbuild@0.17.19)
-      esbuild-plugin-copy:
-        specifier: ^2.1.1
-        version: 2.1.1(esbuild@0.17.19)
-      esbuild-svelte:
-        specifier: ^0.7.3
-        version: 0.7.3(esbuild@0.17.19)(svelte@3.59.1)
-      eslint:
-        specifier: ^8.40.0
-        version: 8.40.0
-      eslint-import-resolver-typescript:
-        specifier: ^3.5.5
-        version: 3.5.5(@typescript-eslint/parser@5.59.5)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
-      eslint-plugin-import:
-        specifier: ^2.27.5
-        version: 2.27.5(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.40.0)(svelte@3.59.1)
-      svelte:
-        specifier: ^3.59.1
-        version: 3.59.1
-      svelte-preprocess:
-        specifier: ^5.0.3
-        version: 5.0.3(svelte@3.59.1)(typescript@5.0.4)
-      tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
-      typescript:
-        specifier: ^5.0.4
-        version: 5.0.4
-      typescript-svelte-plugin:
-        specifier: ^0.3.25
-        version: 0.3.25(svelte@3.59.1)(typescript@5.0.4)
-
-  obsidian-plugin-template/build/obsidian-plugin-library/build/esbuild-compress:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.1.4
-        version: 20.1.4
-
-  obsidian-plugin-template/build/obsidian-plugin-library/build/obsidian:
-    dependencies:
-      '@codemirror/state':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@codemirror/view':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@types/codemirror':
-        specifier: 0.0.108
-        version: 0.0.108
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
 
   obsidian-terminal:
     dependencies:
@@ -528,10 +299,10 @@ importers:
         version: 2.3.0
       obsidian:
         specifier: ^1.2.5
-        version: link:build/obsidian-plugin-library/build/obsidian
+        version: link:../obsidian-api
       obsidian-plugin-library:
         specifier: ^1.0.8
-        version: link:build/obsidian-plugin-library
+        version: link:../obsidian-plugin-library
       semver:
         specifier: ^7.5.0
         version: 7.5.0
@@ -622,7 +393,7 @@ importers:
         version: 0.17.19
       esbuild-compress:
         specifier: ^1.1.5
-        version: link:build/obsidian-plugin-library/build/esbuild-compress
+        version: link:../build/esbuild-compress
       esbuild-svelte:
         specifier: ^0.7.3
         version: 0.7.3(esbuild@0.17.19)(svelte@3.59.1)
@@ -656,213 +427,6 @@ importers:
       typescript-svelte-plugin:
         specifier: ^0.3.25
         version: 0.3.25(svelte@3.59.1)(typescript@5.0.4)
-
-  obsidian-terminal/build/esbuild-compress:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.1.4
-        version: 20.1.4
-
-  obsidian-terminal/build/obsidian:
-    dependencies:
-      '@codemirror/state':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@codemirror/view':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@types/codemirror':
-        specifier: 0.0.108
-        version: 0.0.108
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
-
-  obsidian-terminal/build/obsidian-plugin-library:
-    dependencies:
-      '@capacitor/filesystem':
-        specifier: ^5.0.2
-        version: 5.0.2(@capacitor/core@5.0.3)
-      async-lock:
-        specifier: ^1.4.0
-        version: 1.4.0
-      browser-util-inspect:
-        specifier: ^0.2.0
-        version: 0.2.0
-      deep-equal:
-        specifier: ^2.2.1
-        version: 2.2.1
-      file-saver:
-        specifier: ^2.0.5
-        version: 2.0.5
-      i18next:
-        specifier: ^22.4.15
-        version: 22.4.15
-      i18next-resources-to-backend:
-        specifier: ^1.1.3
-        version: 1.1.3
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lucide:
-        specifier: ^0.216.0
-        version: 0.216.0
-      monkey-around:
-        specifier: ^2.3.0
-        version: 2.3.0
-      obsidian:
-        specifier: ^1.2.5
-        version: link:build/obsidian
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-      semver:
-        specifier: ^7.5.0
-        version: 7.5.0
-      ts-deepmerge:
-        specifier: ^6.0.3
-        version: 6.0.3
-      ts-essentials:
-        specifier: ^9.3.2
-        version: 9.3.2(typescript@5.0.4)
-    devDependencies:
-      '@tsconfig/esm':
-        specifier: ^1.0.3
-        version: 1.0.3
-      '@tsconfig/node16':
-        specifier: ^1.0.4
-        version: 1.0.4
-      '@tsconfig/recommended':
-        specifier: ^1.0.2
-        version: 1.0.2
-      '@tsconfig/strictest':
-        specifier: ^2.0.1
-        version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@types/async-lock':
-        specifier: ^1.4.0
-        version: 1.4.0
-      '@types/browser-util-inspect':
-        specifier: ^0.2.0
-        version: 0.2.0
-      '@types/deep-equal':
-        specifier: ^1.0.1
-        version: 1.0.1
-      '@types/file-saver':
-        specifier: ^2.0.5
-        version: 2.0.5
-      '@types/lodash-es':
-        specifier: ^4.17.7
-        version: 4.17.7
-      '@types/node':
-        specifier: ^16.18.30
-        version: 16.18.30
-      '@types/semver':
-        specifier: ^7.5.0
-        version: 7.5.0
-      '@typescript-eslint/eslint-plugin':
-        specifier: ^5.59.5
-        version: 5.59.5(@typescript-eslint/parser@5.59.5)(eslint@8.40.0)(typescript@5.0.4)
-      '@typescript-eslint/parser':
-        specifier: ^5.59.5
-        version: 5.59.5(eslint@8.40.0)(typescript@5.0.4)
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      esbuild-compress:
-        specifier: ^1.1.5
-        version: link:build/esbuild-compress
-      esbuild-node-externals:
-        specifier: ^1.7.0
-        version: 1.7.0(esbuild@0.17.19)
-      esbuild-plugin-copy:
-        specifier: ^2.1.1
-        version: 2.1.1(esbuild@0.17.19)
-      esbuild-svelte:
-        specifier: ^0.7.3
-        version: 0.7.3(esbuild@0.17.19)(svelte@3.59.1)
-      eslint:
-        specifier: ^8.40.0
-        version: 8.40.0
-      eslint-import-resolver-typescript:
-        specifier: ^3.5.5
-        version: 3.5.5(@typescript-eslint/parser@5.59.5)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
-      eslint-plugin-import:
-        specifier: ^2.27.5
-        version: 2.27.5(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.40.0)(svelte@3.59.1)
-      svelte:
-        specifier: ^3.59.1
-        version: 3.59.1
-      svelte-preprocess:
-        specifier: ^5.0.3
-        version: 5.0.3(svelte@3.59.1)(typescript@5.0.4)
-      tslib:
-        specifier: ^2.5.0
-        version: 2.5.0
-      typescript:
-        specifier: ^5.0.4
-        version: 5.0.4
-      typescript-svelte-plugin:
-        specifier: ^0.3.25
-        version: 0.3.25(svelte@3.59.1)(typescript@5.0.4)
-
-  obsidian-terminal/build/obsidian-plugin-library/build/esbuild-compress:
-    dependencies:
-      esbuild:
-        specifier: ^0.17.19
-        version: 0.17.19
-      import-meta-resolve:
-        specifier: ^3.0.0
-        version: 3.0.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-      lz-string:
-        specifier: ^1.5.0
-        version: 1.5.0
-      p-lazy:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/node':
-        specifier: ^20.1.4
-        version: 20.1.4
-
-  obsidian-terminal/build/obsidian-plugin-library/build/obsidian:
-    dependencies:
-      '@codemirror/state':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@codemirror/view':
-        specifier: ^6.0.0
-        version: 6.0.0
-      '@types/codemirror':
-        specifier: 0.0.108
-        version: 0.0.108
-      moment:
-        specifier: 2.29.4
-        version: 2.29.4
 
 packages:
 
