@@ -27,7 +27,7 @@
   "license": "AGPL-3.0-or-later",
   "name": "obsidian-monorepo",
   "overrides": {
-    "ts-config": "^4.0.0"
+    "tsconfig-paths": "^4.0.0"
   },
   "pnpm": {
     "overrides": {
