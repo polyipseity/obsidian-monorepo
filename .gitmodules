@@ -14,6 +14,10 @@
 	path = obsidian-plugin-template
 	url = ../obsidian-plugin-template.git
 	branch = main
+[submodule "obsidian-show-dotfiles"]
+	path = obsidian-show-dotfiles
+	url = ../obsidian-show-dotfiles.git
+	branch = main
 [submodule "obsidian-terminal"]
 	path = obsidian-terminal
 	url = ../obsidian-terminal.git
