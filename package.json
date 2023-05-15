@@ -1,0 +1,50 @@
+{
+  "author": "polyipseity",
+  "bugs": {
+    "url": "https://github.com/polyipseity/obsidian-monorepo/issues"
+  },
+  "dependencies": {},
+  "description": "Monorepo for Obsidian repositories.",
+  "devDependencies": {},
+  "funding": [
+    {
+      "type": "Buy Me a Coffee",
+      "url": "https://buymeacoffee.com/polyipseity"
+    },
+    {
+      "type": "GitHub Sponsors",
+      "url": "https://github.com/sponsors/polyipseity"
+    }
+  ],
+  "homepage": "https://github.com/polyipseity/obsidian-monorepo#readme",
+  "keywords": [
+    "monorepo",
+    "obsidian",
+    "obsidian-monorepo",
+    "obsidian-plugin",
+    "plugin"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "name": "obsidian-monorepo",
+  "overrides": {
+    "ts-config": "^4.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "tsconfig-paths": "^4.0.0"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polyipseity/obsidian-monorepo.git"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:force": "npm run build:force --workspaces --if-present"
+  },
+  "version": "0.0.0",
+  "workspaces": [
+    "*",
+    "build/*"
+  ]
+}
