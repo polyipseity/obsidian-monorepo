@@ -5,7 +5,7 @@
 [submodule "obsidian-api"]
 	path = obsidian-api
 	url = ../obsidian-api.git
-	branch = master
+	branch = unaugmented/master
 [submodule "obsidian-plugin-library"]
 	path = obsidian-plugin-library
 	url = ../obsidian-plugin-library.git
