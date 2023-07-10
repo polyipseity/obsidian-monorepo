@@ -170,7 +170,7 @@ importers:
         specifier: ^1.2.5
         version: link:../obsidian-api
       obsidian-plugin-library:
-        specifier: ^1.4.1
+        specifier: ^1.5.0
         version: link:../obsidian-plugin-library
       semver:
         specifier: ^7.5.3
@@ -279,7 +279,7 @@ importers:
         specifier: ^1.2.5
         version: link:../obsidian-api
       obsidian-plugin-library:
-        specifier: ^1.4.1
+        specifier: ^1.5.0
         version: link:../obsidian-plugin-library
       semver:
         specifier: ^7.5.3
@@ -397,7 +397,7 @@ importers:
         specifier: ^1.2.5
         version: link:../obsidian-api
       obsidian-plugin-library:
-        specifier: ^1.4.1
+        specifier: ^1.5.0
         version: link:../obsidian-plugin-library
       semver:
         specifier: ^7.5.3
