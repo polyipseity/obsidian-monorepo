@@ -25,7 +25,7 @@
     "plugin"
   ],
   "license": "AGPL-3.0-or-later",
-  "name": "obsidian-monorepo",
+  "name": "@polyipseity/obsidian-monorepo",
   "overrides": {
     "tsconfig-paths": "^4.0.0"
   },
@@ -34,6 +34,7 @@
       "tsconfig-paths": "^4.0.0"
     }
   },
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/polyipseity/obsidian-monorepo.git"
