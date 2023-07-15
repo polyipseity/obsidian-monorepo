@@ -41,7 +41,8 @@
   },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "build:force": "npm run build:force --workspaces --if-present"
+    "build:force": "npm run build:force --workspaces --if-present",
+    "prepare": "npm run build --workspace=obsidian-plugin-library"
   },
   "version": "0.0.0",
   "workspaces": [
