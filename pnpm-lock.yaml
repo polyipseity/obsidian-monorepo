@@ -164,7 +164,7 @@ importers:
   obsidian-plugin-template:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.6.0
+        specifier: ^1.7.0
         version: link:../obsidian-plugin-library
       i18next:
         specifier: ^23.2.11
@@ -182,9 +182,6 @@ importers:
         specifier: ^9.3.2
         version: 9.3.2(typescript@5.1.6)
     devDependencies:
-      '@polyipseity/obsidian':
-        specifier: ^1.2.8
-        version: link:../obsidian-api
       '@tsconfig/esm':
         specifier: ^1.0.4
         version: 1.0.4
@@ -270,7 +267,7 @@ importers:
   obsidian-show-dotfiles:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.6.0
+        specifier: ^1.7.0
         version: link:../obsidian-plugin-library
       deep-equal:
         specifier: ^2.2.2
@@ -379,7 +376,7 @@ importers:
   obsidian-terminal:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.6.0
+        specifier: ^1.7.0
         version: link:../obsidian-plugin-library
       acorn:
         specifier: ^8.10.0
