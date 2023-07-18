@@ -182,9 +182,6 @@ importers:
         specifier: ^9.3.2
         version: 9.3.2(typescript@5.1.6)
     devDependencies:
-      '@polyipseity/obsidian':
-        specifier: ^1.2.8
-        version: link:../obsidian-api
       '@tsconfig/esm':
         specifier: ^1.0.4
         version: 1.0.4
