@@ -264,7 +264,7 @@ importers:
         specifier: 2.1.2
         version: 2.1.2
 
-  obsidian-show-dotfiles:
+  obsidian-show-hidden-files:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
         specifier: ^1.11.0
