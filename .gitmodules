@@ -14,9 +14,9 @@
 	path = obsidian-releases
 	url = ../obsidian-releases.git
 	branch = master
-[submodule "obsidian-show-dotfiles"]
-	path = obsidian-show-dotfiles
-	url = ../obsidian-show-dotfiles.git
+[submodule "obsidian-show-hidden-files"]
+	path = obsidian-show-hidden-files
+	url = ../obsidian-show-hidden-files.git
 	branch = main
 [submodule "obsidian-terminal"]
 	path = obsidian-terminal
