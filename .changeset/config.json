@@ -6,7 +6,6 @@
   "commit": false,
   "fixed": [],
   "ignore": [
-    "@polyipseity/obsidian-monorepo",
     "PLACEHOLDER"
   ],
   "linked": [],
