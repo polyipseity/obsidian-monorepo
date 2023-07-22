@@ -174,7 +174,7 @@ importers:
   obsidian-plugin-template:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.13.0
+        specifier: ^1.13.2
         version: link:../obsidian-plugin-library
       i18next:
         specifier: ^23.2.11
@@ -283,7 +283,7 @@ importers:
   obsidian-show-hidden-files:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.13.0
+        specifier: ^1.13.2
         version: link:../obsidian-plugin-library
       i18next:
         specifier: ^23.2.11
@@ -389,7 +389,7 @@ importers:
   obsidian-terminal:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.13.0
+        specifier: ^1.13.2
         version: link:../obsidian-plugin-library
       acorn:
         specifier: ^8.10.0
