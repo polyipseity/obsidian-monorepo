@@ -3,9 +3,10 @@
   "bugs": {
     "url": "https://github.com/polyipseity/obsidian-monorepo/issues"
   },
-  "dependencies": {},
   "description": "Monorepo for Obsidian repositories.",
-  "devDependencies": {},
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2"
+  },
   "funding": [
     {
       "type": "Buy Me a Coffee",
