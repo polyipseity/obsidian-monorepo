@@ -471,7 +471,7 @@ importers:
         version: 1.4.0
       '@types/browser-util-inspect':
         specifier: ^0.2.0
-        version: 0.2.0
+        version: 0.2.1
       '@types/estree':
         specifier: ^1.0.1
         version: 1.0.1
@@ -932,10 +932,6 @@ packages:
 
   /@types/async-lock@1.4.0:
     resolution: {integrity: sha512-2+rYSaWrpdbQG3SA0LmMT6YxWLrI81AqpMlSkw3QtFc2HGDufkweQSn30Eiev7x9LL0oyFrBqk1PXOnB9IEgKg==}
-    dev: true
-
-  /@types/browser-util-inspect@0.2.0:
-    resolution: {integrity: sha512-tNM9Y3oqYcRbux7HXxYq3GpAqjfpe7nZFLK13i/pp9q6FpbxIuW4CzVavxWzJqmgkBSCGbpxUbRRVN+PVuBy9A==}
     dev: true
 
   /@types/browser-util-inspect@0.2.1:
