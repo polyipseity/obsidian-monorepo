@@ -2,6 +2,10 @@
 	path = obsidian-api
 	url = ../obsidian-api.git
 	branch = forks/polyipseity
+[submodule "obsidian-modules"]
+	path = obsidian-modules
+	url = ../obsidian-modules.git
+	branch = main
 [submodule "obsidian-plugin-library"]
 	path = obsidian-plugin-library
 	url = ../obsidian-plugin-library.git
