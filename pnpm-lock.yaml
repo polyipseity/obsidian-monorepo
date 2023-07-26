@@ -77,9 +77,6 @@ importers:
       '@tsconfig/strictest':
         specifier: ^2.0.1
         version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^5.0.0
-        version: 5.0.0
       '@types/lodash-es':
         specifier: ^4.17.8
         version: 4.17.8
@@ -107,9 +104,6 @@ importers:
       esbuild-plugin-globals:
         specifier: ^0.2.0
         version: 0.2.0
-      esbuild-svelte:
-        specifier: ^0.7.4
-        version: 0.7.4(esbuild@0.18.16)(svelte@3.59.2)
       eslint:
         specifier: ^8.45.0
         version: 8.45.0
@@ -119,27 +113,15 @@ importers:
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@6.1.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.45.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.45.0)(svelte@3.59.2)
       p-lazy:
         specifier: ^4.0.0
         version: 4.0.0
-      svelte:
-        specifier: ^3.59.2
-        version: 3.59.2
-      svelte-preprocess:
-        specifier: ^5.0.4
-        version: 5.0.4(svelte@3.59.2)(typescript@5.1.6)
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
-      typescript-svelte-plugin:
-        specifier: ^0.3.29
-        version: 0.3.29(svelte@3.59.2)(typescript@5.1.6)
 
   obsidian-plugin-library:
     dependencies:
@@ -322,9 +304,6 @@ importers:
       '@tsconfig/strictest':
         specifier: ^2.0.1
         version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^5.0.0
-        version: 5.0.0
       '@types/lodash-es':
         specifier: ^4.17.8
         version: 4.17.8
@@ -352,9 +331,6 @@ importers:
       esbuild-plugin-globals:
         specifier: ^0.2.0
         version: 0.2.0
-      esbuild-svelte:
-        specifier: ^0.7.4
-        version: 0.7.4(esbuild@0.18.16)(svelte@3.59.2)
       eslint:
         specifier: ^8.45.0
         version: 8.45.0
@@ -364,27 +340,15 @@ importers:
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@6.1.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.45.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.45.0)(svelte@3.59.2)
       p-lazy:
         specifier: ^4.0.0
         version: 4.0.0
-      svelte:
-        specifier: ^3.59.2
-        version: 3.59.2
-      svelte-preprocess:
-        specifier: ^5.0.4
-        version: 5.0.4(svelte@3.59.2)(typescript@5.1.6)
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
-      typescript-svelte-plugin:
-        specifier: ^0.3.29
-        version: 0.3.29(svelte@3.59.2)(typescript@5.1.6)
 
   obsidian-releases:
     devDependencies:
@@ -437,9 +401,6 @@ importers:
       '@tsconfig/strictest':
         specifier: ^2.0.1
         version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^5.0.0
-        version: 5.0.0
       '@types/lodash-es':
         specifier: ^4.17.8
         version: 4.17.8
@@ -467,9 +428,6 @@ importers:
       esbuild-plugin-globals:
         specifier: ^0.2.0
         version: 0.2.0
-      esbuild-svelte:
-        specifier: ^0.7.4
-        version: 0.7.4(esbuild@0.18.16)(svelte@3.59.2)
       eslint:
         specifier: ^8.45.0
         version: 8.45.0
@@ -479,27 +437,15 @@ importers:
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@6.1.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.45.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.45.0)(svelte@3.59.2)
       p-lazy:
         specifier: ^4.0.0
         version: 4.0.0
-      svelte:
-        specifier: ^3.59.2
-        version: 3.59.2
-      svelte-preprocess:
-        specifier: ^5.0.4
-        version: 5.0.4(svelte@3.59.2)(typescript@5.1.6)
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
-      typescript-svelte-plugin:
-        specifier: ^0.3.29
-        version: 0.3.29(svelte@3.59.2)(typescript@5.1.6)
 
   obsidian-terminal:
     dependencies:
@@ -591,9 +537,6 @@ importers:
       '@tsconfig/strictest':
         specifier: ^2.0.1
         version: 2.0.1
-      '@tsconfig/svelte':
-        specifier: ^5.0.0
-        version: 5.0.0
       '@types/ansi-escape-sequences':
         specifier: ^4.0.0
         version: 4.0.0
@@ -633,9 +576,6 @@ importers:
       esbuild-plugin-globals:
         specifier: ^0.2.0
         version: 0.2.0
-      esbuild-svelte:
-        specifier: ^0.7.4
-        version: 0.7.4(esbuild@0.18.16)(svelte@3.59.2)
       eslint:
         specifier: ^8.45.0
         version: 8.45.0
@@ -645,27 +585,15 @@ importers:
       eslint-plugin-import:
         specifier: ^2.27.5
         version: 2.27.5(@typescript-eslint/parser@6.1.0)(eslint-import-resolver-typescript@3.5.5)(eslint@8.45.0)
-      eslint-plugin-svelte3:
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@8.45.0)(svelte@3.59.2)
       p-lazy:
         specifier: ^4.0.0
         version: 4.0.0
-      svelte:
-        specifier: ^3.59.2
-        version: 3.59.2
-      svelte-preprocess:
-        specifier: ^5.0.4
-        version: 5.0.4(svelte@3.59.2)(typescript@5.1.6)
       tslib:
         specifier: ^2.6.0
         version: 2.6.0
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
-      typescript-svelte-plugin:
-        specifier: ^0.3.29
-        version: 0.3.29(svelte@3.59.2)(typescript@5.1.6)
 
 packages:
 
