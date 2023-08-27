@@ -1,3 +1,5 @@
 packages:
+  - '!update-dependencies'
+  - '!update-template'
   - '*'
   - build/*
