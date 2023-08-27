@@ -35,6 +35,7 @@ _ACTION_TYPES = _Lit["continue", "update"]
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
 _BRANCH = "forks/polyipseity"
 _REMOTE = "template"
+_GIT_TAG = "latest"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 
 
@@ -94,6 +95,9 @@ async def main(args: Arguments):
 
     async def continue_(path: _Path):
         await _exec(git, "commit", "--gpg-sign", "--no-edit", "--signoff", cwd=path)
+        await _exec(
+            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
+        )
 
     async def update(path: _Path):
         await _exec(git, "fetch", _REMOTE, _BRANCH, cwd=path)
@@ -103,6 +107,9 @@ async def main(args: Arguments):
             "--gpg-sign",
             "--signoff",
             f"refs/remotes/{_REMOTE}/${_BRANCH}",
+        )
+        await _exec(
+            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
 
     if args.action == "continue":

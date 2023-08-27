@@ -28,6 +28,7 @@ from typing import Any as _Any, Callable as _Call, Sequence as _Seq, final as _f
 
 _GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
 _GIT_MESSAGE = "Update dependencies"
+_GIT_TAG = "latest"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 
 
@@ -119,6 +120,9 @@ async def main(args: Arguments):
             _GIT_MESSAGE,
             "--signoff",
             cwd=path,
+        )
+        await _exec(
+            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
 
     errors = tuple(
