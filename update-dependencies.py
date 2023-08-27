@@ -70,7 +70,10 @@ async def _exec(*args: _Any, **kwargs: _Any):
             **kwargs,
         )
         stdout, stderr = await proc.communicate()
-    stdout, stderr = stdout.decode(errors="ignore"), stderr.decode(errors="ignore")
+    stdout, stderr = (
+        stdout.decode(errors="ignore").strip(),
+        stderr.decode(errors="ignore").strip(),
+    )
     if stdout:
         _info(stdout)
     if stderr:
