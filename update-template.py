@@ -107,6 +107,7 @@ async def main(args: Arguments):
             "--gpg-sign",
             "--signoff",
             f"refs/remotes/{_REMOTE}/{_BRANCH}",
+            cwd=path,
         )
         await _exec(
             git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
