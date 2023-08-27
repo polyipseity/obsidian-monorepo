@@ -145,7 +145,6 @@ def parser(parent: _Call[..., _ArgParser] | None = None):
         action="store",
         choices=_ACTIONS,
         help="action",
-        required=True,
         type=str,
     )
     parser.add_argument(
