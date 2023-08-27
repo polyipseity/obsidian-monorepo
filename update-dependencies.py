@@ -83,15 +83,18 @@ async def _exec(*args: _Any, **kwargs: _Any):
 
 
 async def main(args: Arguments):
-    git, npm, npx, pnpm = await _gather(
-        _which2("git"), _which2("npm"), _which2("npx"), _which2("pnpm")
+    git, ncu, npm, pnpm = await _gather(
+        _which2("git"), _which("ncu"), _which2("npm"), _which2("pnpm")
     )
+    if ncu is None:
+        await _exec(npm, "install", "--global", "npm-check-updates")
+        ncu = await _which2("ncu")
 
     async def exec(path: _Path):
         await _exec(
-            npx,
-            "npm-check-updates",
-            *() if args.filter is None else (args.filter,),
+            ncu,
+            *() if args.filter is None else ("--filter", args.filter),
+            "--upgrade",
             cwd=path,
         )
         await _gather(
