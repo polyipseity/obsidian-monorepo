@@ -102,7 +102,7 @@ async def main(args: Arguments):
             _exec(pnpm, "dedupe", cwd=path),
         )
         async with await (path / "package-lock.json").open(
-            "w+t", encoding="UTF-8", errors="strict", newline=None
+            "r+t", encoding="UTF-8", errors="strict", newline=None
         ) as packageLock:
             read = await packageLock.read()
             async with _TskGrp() as grp:
