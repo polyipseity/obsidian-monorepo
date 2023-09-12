@@ -42,7 +42,7 @@ importers:
         specifier: ^6.18.1
         version: 6.18.1
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.18.1
+        specifier: ^1.20.0
         version: link:../obsidian-plugin-library
       '@ts-morph/bootstrap':
         specifier: ^0.20.0
@@ -314,7 +314,7 @@ importers:
   obsidian-plugin-template:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.18.1
+        specifier: ^1.20.0
         version: link:../obsidian-plugin-library
       i18next:
         specifier: ^23.5.1
@@ -405,7 +405,7 @@ importers:
   obsidian-show-hidden-files:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.18.1
+        specifier: ^1.20.0
         version: link:../obsidian-plugin-library
       i18next:
         specifier: ^23.5.1
@@ -493,7 +493,7 @@ importers:
   obsidian-terminal:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.18.1
+        specifier: ^1.20.0
         version: link:../obsidian-plugin-library
       acorn:
         specifier: ^8.10.0
