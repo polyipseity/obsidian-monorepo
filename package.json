@@ -27,13 +27,9 @@
   ],
   "license": "AGPL-3.0-or-later",
   "name": "@polyipseity/obsidian-monorepo",
-  "overrides": {
-    "tsconfig-paths": "^4.0.0"
-  },
+  "overrides": {},
   "pnpm": {
-    "overrides": {
-      "tsconfig-paths": "^4.0.0"
-    }
+    "overrides": {}
   },
   "private": true,
   "repository": {
