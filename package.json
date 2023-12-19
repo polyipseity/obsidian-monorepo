@@ -5,7 +5,7 @@
   },
   "description": "Monorepo for Obsidian repositories.",
   "devDependencies": {
-    "@changesets/cli": "^2.26.2"
+    "@changesets/cli": "^2.27.1"
   },
   "funding": [
     {
