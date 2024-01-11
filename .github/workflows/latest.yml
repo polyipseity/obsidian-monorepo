@@ -1,5 +1,5 @@
 jobs:
-  build:
+  release-latest:
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -13,21 +13,14 @@ jobs:
         node-version: '*'
     - run: npm ci
     - run: npm run build
-  build-pnpm:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: recursive
-    - uses: pnpm/action-setup@v2
-      with:
-        version: '*'
-    - uses: actions/setup-node@v3
-      with:
-        cache: pnpm
-        node-version: '*'
-    - run: pnpm install
-    - run: pnpm build
+    - run: |
+        npm pack --pack-destination=.github
+        for file in .github/*.tgz; do mv "$file" "${file%-*}.tgz"; done
+    - if: ${{github.ref == 'refs/tags/latest'}}
+      env:
+        GH_TOKEN: ${{github.token}}
+      run: |
+        gh release upload latest .github/*.tgz --clobber
 on:
   push:
     tags:
