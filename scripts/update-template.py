@@ -151,7 +151,7 @@ def parser(parent: _Call[..., _ArgParser] | None = None):
     parser.add_argument(
         "inputs",
         action="store",
-        help="sequence of reposoitory(s)",
+        help="sequence of repository(s)",
         nargs=_ONE_OR_MORE,
         type=_Path,
     )
