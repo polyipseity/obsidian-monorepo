@@ -131,7 +131,7 @@ async def main(args: Arguments):
         if err
     )
     if errors:
-        raise ExceptionGroup("", errors)
+        raise BaseExceptionGroup("", errors)
 
     _exit(0)
 
