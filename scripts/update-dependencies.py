@@ -8,8 +8,8 @@ from argparse import (
 )
 from asyncio import (
     BoundedSemaphore as _BSemp,
+    TaskGroup,
     create_subprocess_exec as _new_sproc,
-    create_task,
     gather as _gather,
     run as _run,
 )
@@ -106,9 +106,9 @@ async def main(args: Arguments):
             "r+t", encoding="UTF-8", errors="strict", newline=None
         ) as packageLock:
             read = await packageLock.read()
-            seek = create_task(packageLock.seek(0))
-            read = read.strip()
-            await seek
+            async with TaskGroup() as tg:
+                _ = tg.create_task(packageLock.seek(0))
+                read = read.strip()
             await packageLock.write(read)
             await packageLock.truncate()
         await _exec(git, "add", *_GIT_FILES, cwd=path)
