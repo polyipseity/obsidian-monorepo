@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 from aioshutil import which as _which
 from anyio import Path as _Path
 from argparse import (
