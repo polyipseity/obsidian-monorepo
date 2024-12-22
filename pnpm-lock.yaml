@@ -4,13 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@aidenlx/esbuild-plugin-inline-worker>nanoid': ^3.3.8
+
 importers:
 
   .:
     devDependencies:
       '@changesets/cli':
-        specifier: ^2.27.5
-        version: 2.27.5
+        specifier: ^2.27.11
+        version: 2.27.11
 
   obsidian-api:
     dependencies:
@@ -2408,9 +2411,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
+  nanoid@3.3.8:
+    resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
   natural-compare@1.4.0:
@@ -3201,7 +3204,7 @@ snapshots:
   '@aidenlx/esbuild-plugin-inline-worker@1.0.1(esbuild@0.17.19)':
     dependencies:
       esbuild: 0.17.19
-      nanoid: 4.0.2
+      nanoid: 3.3.8
 
   '@babel/code-frame@7.12.11':
     dependencies:
@@ -5222,7 +5225,7 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  nanoid@4.0.2: {}
+  nanoid@3.3.8: {}
 
   natural-compare@1.4.0: {}
 
