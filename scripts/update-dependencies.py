@@ -120,7 +120,6 @@ async def main(args: Arguments):
             "--gpg-sign",
             "--message",
             _GIT_MESSAGE,
-            "--signoff",
             cwd=path,
         )
         await _exec(
