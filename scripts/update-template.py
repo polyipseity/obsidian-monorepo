@@ -93,7 +93,7 @@ async def main(args: Arguments):
     git = await _which2("git")
 
     async def continue_(path: _Path):
-        await _exec(git, "commit", "--gpg-sign", "--no-edit", "--signoff", cwd=path)
+        await _exec(git, "commit", "--gpg-sign", "--no-edit", cwd=path)
         await _exec(
             git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
@@ -104,7 +104,6 @@ async def main(args: Arguments):
             git,
             "merge",
             "--gpg-sign",
-            "--signoff",
             f"refs/remotes/{_REMOTE}/{_BRANCH}",
             cwd=path,
         )
