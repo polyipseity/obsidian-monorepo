@@ -1,6 +1,6 @@
 [submodule "obsidian-api"]
-	path = obsidian-api
-	url = ../obsidian-api.git
+	path = ext.obsidian-api
+	url = ../ext.obsidian-api.git
 	branch = forks/polyipseity
 [submodule "obsidian-modules"]
 	path = obsidian-modules
@@ -15,8 +15,8 @@
 	url = ../obsidian-plugin-template.git
 	branch = main
 [submodule "obsidian-releases"]
-	path = obsidian-releases
-	url = ../obsidian-releases.git
+	path = ext.obsidian-releases
+	url = ../ext.obsidian-releases.git
 	branch = master
 [submodule "obsidian-show-hidden-files"]
 	path = obsidian-show-hidden-files
