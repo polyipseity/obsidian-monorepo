@@ -574,7 +574,7 @@ importers:
   obsidian-terminal:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.28.0
+        specifier: ^1.29.1
         version: link:../obsidian-plugin-library
       '@xterm/addon-canvas':
         specifier: ^0.7.0
