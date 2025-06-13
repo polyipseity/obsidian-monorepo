@@ -401,9 +401,6 @@ importers:
       '@eslint/js':
         specifier: ^9.28.0
         version: 9.28.0
-      '@polyipseity/obsidian':
-        specifier: ~1.4.11
-        version: 1.4.11(@codemirror/state@6.5.2)(@codemirror/view@6.37.1)
       '@tsconfig/node16':
         specifier: ^16.1.4
         version: 16.1.4
@@ -471,7 +468,7 @@ importers:
   obsidian-show-hidden-files:
     dependencies:
       '@polyipseity/obsidian-plugin-library':
-        specifier: ^1.28.0
+        specifier: ^1.29.0
         version: link:../obsidian-plugin-library
       espree:
         specifier: ^10.4.0
