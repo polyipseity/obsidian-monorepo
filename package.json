@@ -27,9 +27,13 @@
   ],
   "license": "AGPL-3.0-or-later",
   "name": "@polyipseity/obsidian-monorepo",
-  "overrides": {},
+  "overrides": {
+    "tmp": "^0.2.5"
+  },
   "pnpm": {
-    "overrides": {}
+    "overrides": {
+      "tmp": "^0.2.5"
+    }
   },
   "private": true,
   "repository": {
