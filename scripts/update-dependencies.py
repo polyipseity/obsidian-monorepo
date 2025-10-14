@@ -27,7 +27,7 @@ from typing import Any as _Any, Callable as _Call, Sequence as _Seq, final as _f
 
 _GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
 _GIT_MESSAGE = "Update dependencies"
-_GIT_TAG = "latest"
+_GIT_TAG = "rolling"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 
 

@@ -34,7 +34,7 @@ _ACTION_TYPES = _Lit["continue", "update"]
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
 _BRANCH = "forks/polyipseity"
 _REMOTE = "template"
-_GIT_TAG = "latest"
+_GIT_TAG = "rolling"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 
 
