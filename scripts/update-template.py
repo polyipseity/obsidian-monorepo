@@ -34,6 +34,7 @@ _ACTION_TYPES = _Lit["continue", "update"]
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
 _BRANCH = "forks/polyipseity"
 _REMOTE = "template"
+_GIT_MESSAGE = "chore(template): merge updates from template"
 _GIT_TAG = "rolling"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 
@@ -93,7 +94,15 @@ async def main(args: Arguments):
     git = await _which2("git")
 
     async def continue_(path: _Path):
-        await _exec(git, "commit", "--gpg-sign", "--no-edit", cwd=path)
+        await _exec(
+            git,
+            "commit",
+            "--gpg-sign",
+            "--message",
+            _GIT_MESSAGE,
+            "--no-edit",
+            cwd=path,
+        )
         await _exec(
             git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
