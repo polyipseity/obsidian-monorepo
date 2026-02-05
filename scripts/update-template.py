@@ -113,6 +113,8 @@ async def main(args: Arguments):
             git,
             "merge",
             "--gpg-sign",
+            "--message",
+            _GIT_MESSAGE,
             f"refs/remotes/{_REMOTE}/{_BRANCH}",
             cwd=path,
         )
