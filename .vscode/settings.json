@@ -1,3 +1,9 @@
 {
+  "chat.tools.terminal.autoApprove": {
+    "/^npm run\\s+\\S+(?:\\s.*)?$/": true,
+    "/^npx\\s+vitest(?:\\s.*)?$/": true,
+    "/^pnpm run\\s+\\S+(?:\\s.*)?$/": true,
+    "/^pnpm\\s+vitest(?:\\s.*)?$/": true
+  },
   "markdown.validate.enabled": true
 }
