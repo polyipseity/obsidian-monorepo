@@ -33,7 +33,7 @@ from typing import (
 _ACTION_TYPES = _Lit["continue", "update"]
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
 _BRANCH = "forks/polyipseity"
-_REMOTE = "template"
+_REMOTE_URL = "https://github.com/polyipseity/obsidian-plugin-template.git"
 _GIT_MESSAGE = "chore(template): merge updates from template"
 _GIT_TAG = "rolling"
 _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
@@ -108,14 +108,14 @@ async def main(args: Arguments):
         )
 
     async def update(path: _Path):
-        await _exec(git, "fetch", _REMOTE, _BRANCH, cwd=path)
+        await _exec(git, "fetch", _REMOTE_URL, _BRANCH, cwd=path)
         await _exec(
             git,
             "merge",
             "--gpg-sign",
             "--message",
             _GIT_MESSAGE,
-            f"refs/remotes/{_REMOTE}/{_BRANCH}",
+            "FETCH_HEAD",
             cwd=path,
         )
         await _exec(
