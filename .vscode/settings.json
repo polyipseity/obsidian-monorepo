@@ -7,7 +7,8 @@
     "Out-Null": true,
     "Pop-Location": true,
     "Push-Location": true,
-    "Test-Path": true
+    "Test-Path": true,
+    "git rev-parse": true
   },
   "markdown.validate.enabled": true
 }
