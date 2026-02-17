@@ -30,7 +30,7 @@ async def _find_py_files() -> list[Path]:
 
     files: list[Path] = []
 
-    async for path in (ROOT / "src").rglob("*.py"):
+    async for path in (ROOT / "scripts").rglob("*.py"):
         files.append(path)
     async for path in (ROOT / "tests").rglob("*.py"):
         files.append(path)
