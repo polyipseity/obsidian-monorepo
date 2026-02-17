@@ -1,29 +1,54 @@
-from aioshutil import which as _which
-from anyio import Path as _Path
+from argparse import (
+    ONE_OR_MORE as _ONE_OR_MORE,
+)
 from argparse import (
     ArgumentParser as _ArgParser,
+)
+from argparse import (
     Namespace as _NS,
-    ONE_OR_MORE as _ONE_OR_MORE,
 )
 from asyncio import (
     BoundedSemaphore as _BSemp,
+)
+from asyncio import (
     create_subprocess_exec as _new_sproc,
+)
+from asyncio import (
     create_task,
+)
+from asyncio import (
     gather as _gather,
+)
+from asyncio import (
     run as _run,
 )
-from asyncio.subprocess import DEVNULL as _DEVNULL, PIPE as _PIPE
+from asyncio.subprocess import DEVNULL as _DEVNULL
+from asyncio.subprocess import PIPE as _PIPE
 from dataclasses import dataclass as _dc
-from functools import partial as _partial, wraps as _wraps
+from functools import partial as _partial
+from functools import wraps as _wraps
 from logging import (
     INFO as _INFO,
+)
+from logging import (
     basicConfig as _basicConfig,
+)
+from logging import (
     error as _err,
+)
+from logging import (
     info as _info,
 )
 from os import cpu_count as _cpu_c
-from sys import argv as _argv, exit as _exit
-from typing import Any as _Any, Callable as _Call, Sequence as _Seq, final as _fin
+from sys import argv as _argv
+from sys import exit as _exit
+from typing import Any as _Any
+from typing import Callable as _Call
+from typing import Sequence as _Seq
+from typing import final as _fin
+
+from aioshutil import which as _which
+from anyio import Path as _Path
 
 _GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
 _GIT_MESSAGE = "Update dependencies"

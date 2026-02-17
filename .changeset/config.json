@@ -5,9 +5,7 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [],
-  "ignore": [
-    "PLACEHOLDER"
-  ],
+  "ignore": ["PLACEHOLDER"],
   "linked": [],
   "updateInternalDependencies": "patch"
 }
