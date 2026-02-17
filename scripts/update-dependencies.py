@@ -24,6 +24,8 @@ from asyncio import (
 )
 from asyncio.subprocess import DEVNULL as _DEVNULL
 from asyncio.subprocess import PIPE as _PIPE
+from collections.abc import Callable as _Call
+from collections.abc import Sequence as _Seq
 from dataclasses import dataclass as _dc
 from functools import partial as _partial
 from functools import wraps as _wraps
@@ -43,8 +45,6 @@ from os import cpu_count as _cpu_c
 from sys import argv as _argv
 from sys import exit as _exit
 from typing import Any as _Any
-from typing import Callable as _Call
-from typing import Sequence as _Seq
 from typing import final as _fin
 
 from aioshutil import which as _which
