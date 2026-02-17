@@ -11,4 +11,8 @@ export default {
   globs: [FILE_GLOB],
   // Use repository gitignore to exclude files (faster for large trees)
   gitignore: true,
+  ignores: [
+    // Ignore markdown files in directories starting with `ext.`, which are not part of the main codebase and may contain different formatting rules or be generated files.
+    "ext.*/**/*",
+  ],
 };

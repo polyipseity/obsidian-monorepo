@@ -5,7 +5,8 @@
 **/node_modules
 # }
 
-# custom {
+# self {
 **/package-lock.json
 **/pnpm-lock.yaml
+/ext.*/
 # }
