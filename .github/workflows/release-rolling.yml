@@ -1,0 +1,74 @@
+# Release Workflow: Rolling Tag Build
+#
+# This workflow builds and publishes a rolling release when the `rolling` tag is pushed.
+# It uses the `ubuntu-slim` runner to reduce GitHub Actions billing costs while maintaining compatibility.
+#
+# Rationale: `ubuntu-slim` is chosen for its smaller image size, which speeds up job startup and reduces CI minutes billed.
+# This is especially important for open source projects with limited CI budgets.
+#
+# Jobs and steps are named for clarity in the Actions UI.
+
+name: "Release: Rolling Tag Build"
+on:
+  push:
+    tags:
+      - rolling
+  workflow_dispatch:
+
+# Ensure only one instance of this workflow runs at any time across the repository.
+# - Use the workflow identifier (`github.workflow`) so the group is unique per workflow
+#   across the repository and does not require hardcoding.
+# - `cancel-in-progress: true` cancels any currently running instance so the newest
+#   run replaces older ones and always runs (useful for rolling releases).
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  rolling-release:
+    name: Publish Rolling Release
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "*"
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "*"
+          cache: "pnpm"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          version-file: "pyproject.toml"
+
+      - name: Install project
+        run: |
+          pnpm install --frozen-lockfile --ignore-scripts
+          uv sync --locked --all-extras --dev
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Pack plugin for release
+        run: |
+          pnpm pack --pack-destination=.github
+          for file in .github/*.tgz; do mv "$file" "${file%-*}.tgz"; done
+
+      - name: Upload plugin to rolling release
+        if: ${{github.ref == 'refs/tags/rolling'}}
+        env:
+          GH_TOKEN: ${{github.token}}
+        run: |
+          gh release upload rolling .github/*.tgz --clobber

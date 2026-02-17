@@ -1,0 +1,45 @@
+# Commit Message Lint Workflow
+#
+# This workflow lints commit messages on push, pull request, or manual dispatch.
+#
+# Rationale for using `ubuntu-latest` instead of `ubuntu-slim`:
+# - The `wagoid/commitlint-github-action` uses a Docker action image for linting.
+# - The `ubuntu-slim` runner does not include Docker, so it cannot pull and run Docker-based actions.
+# - Therefore, `ubuntu-latest` is required to ensure Docker is available and the action works correctly.
+
+name: Commit message lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "**" # Listen to pushes on all branches
+    tags-ignore:
+      - "**" # Ignore tag pushes
+  workflow_dispatch:
+
+# Use concurrency to deduplicate runs.
+# - For pull requests: group by `pr-<number>` so multiple commits to the same PR
+#   cancel previous runs and only the latest is kept.
+# - For direct pushes: fall back to deduplicating by commit SHA so identical
+#   commits don't trigger multiple concurrent workflows.
+# - Include the `github.workflow` name in the group to avoid cross-workflow collisions.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest # See rationale above
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Lint commit messages
+        uses: wagoid/commitlint-github-action@v6

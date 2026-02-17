@@ -5,7 +5,19 @@
   },
   "description": "Monorepo for Obsidian repositories.",
   "devDependencies": {
-    "@changesets/cli": "^2.29.7"
+    "@changesets/cli": "^2.29.8",
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "@types/node": "^25.1.0",
+    "@vitest/coverage-v8": "^4.0.18",
+    "happy-dom": "^20.6.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "markdownlint-cli2": "^0.21.0",
+    "prettier": "^3.2.5",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "funding": [
     {
@@ -37,10 +49,23 @@
     "url": "git+https://github.com/polyipseity/obsidian-monorepo.git"
   },
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "build:force": "npm run build:force --workspaces --if-present",
-    "prepare": "npm run build:force --workspace=obsidian-plugin-library"
+    "build": "npm run check && npm run build:force",
+    "build:dev": "npm run build:force -- dev",
+    "build:force": "node -e \"console.log('No build step')\"",
+    "check": "npm run check:md && npm run check:prettier",
+    "check:md": "markdownlint-cli2",
+    "check:prettier": "prettier --cache --check \"**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}\"",
+    "commitlint": "commitlint --from=origin/main --to=HEAD",
+    "format": "npm run format:md && npm run format:prettier",
+    "format:md": "markdownlint-cli2 --fix",
+    "format:prettier": "prettier --cache --write \"**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}\"",
+    "prepare": "husky",
+    "test": "npm run test:vitest",
+    "test:vitest": "vitest run --coverage",
+    "test:watch": "vitest"
   },
+  "sideEffects": false,
+  "type": "module",
   "version": "0.0.0",
   "workspaces": [
     "*",
