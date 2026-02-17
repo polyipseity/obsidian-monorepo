@@ -1,74 +1,30 @@
-from argparse import (
-    ONE_OR_MORE as _ONE_OR_MORE,
-)
-from argparse import (
-    ArgumentParser as _ArgParser,
-)
-from argparse import (
-    Namespace as _NS,
-)
-from asyncio import (
-    BoundedSemaphore as _BSemp,
-)
-from asyncio import (
-    create_subprocess_exec as _new_sproc,
-)
-from asyncio import (
-    gather as _gather,
-)
-from asyncio import (
-    run as _run,
-)
-from asyncio.subprocess import DEVNULL as _DEVNULL
-from asyncio.subprocess import PIPE as _PIPE
-from collections.abc import (
-    Callable as _Call,
-)
-from collections.abc import (
-    Sequence as _Seq,
-)
-from dataclasses import dataclass as _dc
-from functools import partial as _partial
-from functools import wraps as _wraps
-from logging import (
-    INFO as _INFO,
-)
-from logging import (
-    basicConfig as _basicConfig,
-)
-from logging import (
-    error as _err,
-)
-from logging import (
-    info as _info,
-)
-from os import cpu_count as _cpu_c
-from sys import argv as _argv
-from sys import exit as _exit
-from typing import (
-    Any as _Any,
-)
-from typing import (
-    Literal as _Lit,
-)
-from typing import (
-    final as _fin,
-)
+from argparse import ONE_OR_MORE, ArgumentParser, Namespace
+from asyncio import BoundedSemaphore, create_subprocess_exec, gather, run
+from asyncio.subprocess import DEVNULL, PIPE
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
+from functools import partial, wraps
+from logging import INFO, basicConfig, error, info
+from os import cpu_count
+from sys import argv, exit
+from typing import Any, Literal, final
 
-from aioshutil import which as _which
-from anyio import Path as _Path
+from aioshutil import which
+from anyio import Path
 
-_ACTION_TYPES = _Lit["continue", "update"]
+__all__ = ("Arguments", "parser", "main")
+
+_ACTION_TYPES = Literal["continue", "update"]
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
 _BRANCH = "forks/polyipseity"
 _REMOTE_URL = "https://github.com/polyipseity/obsidian-plugin-template.git"
 _GIT_MESSAGE = "chore(template): merge updates from template"
 _GIT_TAG = "rolling"
-_SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
+_SUBPROCESS_SEMAPHORE = BoundedSemaphore(cpu_count() or 4)
 
 
-@_fin
-@_dc(
+@final
+@dataclass(
     init=True,
     repr=True,
     eq=True,
@@ -81,28 +37,28 @@ _SUBPROCESS_SEMAPHORE = _BSemp(_cpu_c() or 4)
 )
 class Arguments:
     action: _ACTION_TYPES
-    inputs: _Seq[_Path]
+    inputs: Sequence[Path]
 
     def __post_init__(self):
         object.__setattr__(self, "inputs", tuple(self.inputs))
 
 
-@_wraps(_which)
+@wraps(which)
 async def _which2(cmd: str):
-    ret = await _which(cmd)
+    ret = await which(cmd)
     if ret is None:
         raise FileNotFoundError(cmd)
     return ret
 
 
-@_wraps(_new_sproc)
-async def _exec(*args: _Any, **kwargs: _Any):
+@wraps(create_subprocess_exec)
+async def _exec(*args: Any, **kwargs: Any):
     async with _SUBPROCESS_SEMAPHORE:
-        proc = await _new_sproc(
+        proc = await create_subprocess_exec(
             *args,
-            stdin=_DEVNULL,
-            stdout=_PIPE,
-            stderr=_PIPE,
+            stdin=DEVNULL,
+            stdout=PIPE,
+            stderr=PIPE,
             **kwargs,
         )
         stdout, stderr = await proc.communicate()
@@ -111,9 +67,9 @@ async def _exec(*args: _Any, **kwargs: _Any):
         stderr.decode(errors="ignore").strip(),
     )
     if stdout:
-        _info(stdout)
+        info(stdout)
     if stderr:
-        _err(stderr)
+        error(stderr)
     if proc.returncode:
         raise ChildProcessError(proc.returncode, stderr)
 
@@ -121,7 +77,7 @@ async def _exec(*args: _Any, **kwargs: _Any):
 async def main(args: Arguments):
     git = await _which2("git")
 
-    async def continue_(path: _Path):
+    async def continue_(path: Path):
         await _exec(
             git,
             "commit",
@@ -135,7 +91,7 @@ async def main(args: Arguments):
             git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
 
-    async def update(path: _Path):
+    async def update(path: Path):
         await _exec(git, "fetch", _REMOTE_URL, _BRANCH, cwd=path)
         await _exec(
             git,
@@ -159,19 +115,19 @@ async def main(args: Arguments):
 
     errors = tuple(
         err
-        for err in await _gather(*map(action, args.inputs), return_exceptions=True)
+        for err in await gather(*map(action, args.inputs), return_exceptions=True)
         if err
     )
     if errors:
         raise BaseExceptionGroup("", errors)
 
-    _exit(0)
+    exit(0)
 
 
-def parser(parent: _Call[..., _ArgParser] | None = None):
-    prog = _argv[0]
+def parser(parent: Callable[..., ArgumentParser] | None = None):
+    prog = argv[0]
 
-    parser = (_ArgParser if parent is None else parent)(
+    parser = (ArgumentParser if parent is None else parent)(
         prog=prog,
         description="update template",
         add_help=True,
@@ -189,17 +145,17 @@ def parser(parent: _Call[..., _ArgParser] | None = None):
         "inputs",
         action="store",
         help="sequence of repository(s)",
-        nargs=_ONE_OR_MORE,
-        type=_Path,
+        nargs=ONE_OR_MORE,
+        type=Path,
     )
 
-    @_wraps(main)
-    async def invoke(entry: _NS):
+    @wraps(main)
+    async def invoke(entry: Namespace):
         await main(
             Arguments(
                 action=entry.action,
-                inputs=await _gather(
-                    *map(_partial(_Path.resolve, strict=True), entry.inputs)
+                inputs=await gather(
+                    *map(partial(Path.resolve, strict=True), entry.inputs)
                 ),
             )
         )
@@ -209,6 +165,6 @@ def parser(parent: _Call[..., _ArgParser] | None = None):
 
 
 if __name__ == "__main__":
-    _basicConfig(level=_INFO)
-    entry = parser().parse_args(_argv[1:])
-    _run(entry.invoke(entry))
+    basicConfig(level=INFO)
+    entry = parser().parse_args(argv[1:])
+    run(entry.invoke(entry))

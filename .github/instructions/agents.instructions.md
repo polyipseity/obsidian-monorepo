@@ -24,9 +24,33 @@ This short guide contains focused rules and examples to help AI coding agents ma
   - **Agent note:** the `vitest` CLI defaults to interactive/watch mode when invoked without a subcommand. Agents must use `vitest run <options>` or append `--run` so tests run non-interactively.
 - Python module exports:
   - Every Python module must declare a top-level `__all__` tuple (even if empty). Use a `tuple` (not a `list`).
-  - Place the `__all__` assignment after top-level imports (tests enforce ordering).
-  - Do not hide imported names by aliasing them with a leading underscore solely to prevent export — rely on explicit `__all__` instead.
-  - When changing a module's public API, update or add tests in `tests/test_module_exports.py` (or add module-level tests) that document the expected exports.
+  - Place the `__all__` assignment immediately after top-level `import` / `from ... import ...` statements and before any other top-level code; repository tests enforce this ordering.
+  - `__all__` should explicitly list the module's public API (functions, classes, constants) — omit names that are internal (leading underscore).
+  - Remove underscore-import aliasing that was previously used only to avoid accidental exports. Example: `from typing import Any as _Any` -> `from typing import Any` and update references from `_Any` -> `Any`. Explicit `__all__` (not name-mangling) controls what a module exports.
+  - Example — before/after (short):
+
+    Before:
+
+    ```py
+    from typing import Any as _Any
+
+    def helper(): ...
+    def useful(): ...
+    ```
+
+    After:
+
+    ```py
+    from typing import Any
+
+    __all__ = ("useful",)
+
+    def helper(): ...  # private (leading underscore or omitted from __all__)
+    def useful(): ...
+    ```
+
+  - When changing exports, update or add tests that assert the public surface (see `tests/test_module_exports.py`); add per-module export tests when appropriate.
+  - Agent checklist: add `__all__`, remove underscore-only import aliases, run the Python export tests, and update any type annotations/usages affected by the import-name changes.
 - Localization:
   - Add keys by editing `assets/locales/en/translation.json` first. Keep `{{...}}` and `$t(...)` intact and **do not** translate placeholders.
   - Add a test when adding user-facing strings (or a localization note) so translators and CI can detect missing or bad keys.

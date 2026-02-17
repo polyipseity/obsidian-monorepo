@@ -48,7 +48,11 @@ Notes:
 
 - TypeScript rules: avoid `any`, avoid `as` casts, prefer `interface` for object shapes, and add runtime type guards when needed.
 - Commit messages: follow Conventional Commits; run `npm run commitlint` or `pnpm -w run commitlint` before pushing.
-- Python modules (if present): declare a top-level `__all__` tuple.
+- Python modules & `__all__`:
+  - Every Python module must declare a top-level `__all__` tuple (even if empty). Use a `tuple` (not a `list`) and place the assignment immediately after top-level imports.
+  - `__all__` must list the public API (functions, classes, constants). Internal helpers should remain named with a leading underscore or omitted from `__all__`.
+  - Do **not** avoid exporting names by aliasing imports with leading underscores — remove such aliasing and rely on `__all__` to control exports. Update all references and type annotations accordingly.
+  - When changing a module's public API, add or update tests (see `tests/test_module_exports.py`) to assert the expected exports.
 
 ## 4. Integration points & shared packages
 
