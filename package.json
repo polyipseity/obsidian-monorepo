@@ -64,7 +64,8 @@
     "format:prettier": "prettier --cache --write \"**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}\"",
     "format:py": "uv run --locked ruff check --fix && uv run --locked ruff format && pyright",
     "prepare": "uv sync --all-extras --dev && husky",
-    "test": "npm run test:vitest",
+    "test": "npm run test:py && npm run test:vitest",
+    "test:py": "uv run --locked pytest",
     "test:vitest": "vitest run --coverage",
     "test:watch": "vitest"
   },
