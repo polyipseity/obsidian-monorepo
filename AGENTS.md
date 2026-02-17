@@ -91,7 +91,24 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 
 ---
 
-## 8. Linked instructions & resources
+## 8. Copilot / Chat assistant examples 💬
+
+- Location: primary guidance is in `.github/instructions/copilot.instructions.md`; package-level `copilot.instructions.md` files may add repo-specific examples.
+- Response template (copy/paste): Summary; Changed files; Tests; Commands to run; Risk / Next steps.
+- Example — add failing unit test + fix:
+  - Summary: Add failing test and minimal fix for the bug.
+  - Changed files: `src/foo.ts`, `tests/foo.spec.ts`
+  - Commands: `pnpm --filter <pkg> test -- --run`
+- Example — add i18n key + UI change:
+  - Summary: Add `syncNow` key and update UI to use it.
+  - Changed files: `assets/locales/en/translation.json`, `src/components/SyncButton.tsx`
+  - Commands: `pnpm -w test`
+- Refusal text (exact): `Sorry, I can't assist with that.`
+- When to ask clarifying questions: ambiguous requirements, multiple valid approaches, or public API/settings changes.
+
+---
+
+## 9. Linked instructions & resources
 
 - `.github/instructions/` — coding rules and per-topic instructions (TypeScript, localization, commit messages).
 - Package `AGENTS.md` files listed above for package-level guidance.
