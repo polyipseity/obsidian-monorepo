@@ -36,11 +36,11 @@ importers:
         specifier: ^0.21.0
         version: 0.21.0
       prettier:
-        specifier: ^3.2.5
-        version: 3.5.3
+        specifier: ^3.8.1
+        version: 3.8.1
       prettier-plugin-svelte:
         specifier: ^3.4.1
-        version: 3.4.1(prettier@3.5.3)(svelte@5.51.2)
+        version: 3.4.1(prettier@3.8.1)(svelte@5.51.2)
       pyright:
         specifier: ^1.1.408
         version: 1.1.408
@@ -60,7 +60,7 @@ importers:
         specifier: ^6.5.4
         version: 6.5.4
       '@codemirror/view':
-        specifier: ^6.39.12
+        specifier: ^6.39.14
         version: 6.39.14
       '@polyipseity/esbuild-plugin-inline-worker':
         specifier: ^1.0.3
@@ -691,13 +691,13 @@ importers:
         specifier: ^7.7.4
         version: 7.7.4
       simple-icons:
-        specifier: ^16.7.0
+        specifier: ^16.9.0
         version: 16.9.0
       source-map:
         specifier: ^0.7.4
         version: 0.7.4
       svelte:
-        specifier: ^5.49.2
+        specifier: ^5.51.2
         version: 5.51.2
       tmp-promise:
         specifier: ^3.0.3
@@ -3190,6 +3190,11 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
+  prettier@3.8.1:
+    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
+    engines: {node: '>=14'}
+    hasBin: true
+
   promise-batcher@1.1.1:
     resolution: {integrity: sha512-DtGBp8OQlAtALDFoVphyAz6Vn1c0GyelKU5smpMQEXpEAcWWxY3fC5JT0AkpWqrljvJrhC6zVdWbK/jx6NNG2A==}
     engines: {node: '>=8'}
@@ -4279,7 +4284,7 @@ snapshots:
   '@jridgewell/remapping@2.3.5':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
-      '@jridgewell/trace-mapping': 0.3.29
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
@@ -5371,7 +5376,7 @@ snapshots:
 
   esrap@2.2.3:
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.0
+      '@jridgewell/sourcemap-codec': 1.5.5
 
   esrecurse@4.3.0:
     dependencies:
@@ -6355,14 +6360,16 @@ snapshots:
       prettier: 3.5.3
       svelte: 5.38.0
 
-  prettier-plugin-svelte@3.4.1(prettier@3.5.3)(svelte@5.51.2):
+  prettier-plugin-svelte@3.4.1(prettier@3.8.1)(svelte@5.51.2):
     dependencies:
-      prettier: 3.5.3
+      prettier: 3.8.1
       svelte: 5.51.2
 
   prettier@2.8.8: {}
 
   prettier@3.5.3: {}
+
+  prettier@3.8.1: {}
 
   promise-batcher@1.1.1:
     dependencies:
@@ -6656,9 +6663,9 @@ snapshots:
   svelte@5.51.2:
     dependencies:
       '@jridgewell/remapping': 2.3.5
-      '@jridgewell/sourcemap-codec': 1.5.0
+      '@jridgewell/sourcemap-codec': 1.5.5
       '@sveltejs/acorn-typescript': 1.0.5(acorn@8.15.0)
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       '@types/trusted-types': 2.0.7
       acorn: 8.15.0
       aria-query: 5.3.2
@@ -6669,7 +6676,7 @@ snapshots:
       esrap: 2.2.3
       is-reference: 3.0.3
       locate-character: 3.0.0
-      magic-string: 0.30.17
+      magic-string: 0.30.21
       zimmerframe: 1.1.2
 
   term-size@2.2.1: {}
