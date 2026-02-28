@@ -697,7 +697,7 @@ importers:
         specifier: ^0.7.4
         version: 0.7.4
       svelte:
-        specifier: ^5.53.0
+        specifier: ^5.53.6
         version: 5.53.6
       tmp-promise:
         specifier: ^3.0.3
@@ -4252,12 +4252,12 @@ snapshots:
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
-      '@jridgewell/trace-mapping': 0.3.29
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/remapping@2.3.5':
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
-      '@jridgewell/trace-mapping': 0.3.29
+      '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
