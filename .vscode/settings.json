@@ -17,7 +17,8 @@
     "pyright": true,
     "pytest": true,
     "ruff": true,
-    "rumdl": true
+    "rumdl": true,
+    "type": true
   },
   "files.associations": {
     ".prettierignore": "ignore"
