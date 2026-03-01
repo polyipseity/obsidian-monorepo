@@ -46,3 +46,6 @@ updates:
       uv:
         patterns:
           - "*"
+    exclude-paths:
+      # wtf: <https://github.com/dependabot/dependabot-core/issues/13960>
+      - "LICENSE.txt"
