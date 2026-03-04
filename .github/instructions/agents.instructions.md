@@ -22,6 +22,7 @@ This short guide contains focused rules and examples to help AI coding agents ma
   - Unit tests: `*.spec.*` — fast, hermetic, BDD-style.
   - Integration tests: `*.test.*` — TDD-style; may use tmp dirs, child processes, or spawn/exec like `obsidian-install` tests.
   - Put tests under `tests/` mirroring `src/` layout. Follow the **one test file per source file** convention.
+  - **Python-specific convention:** pytest's `tmp_path` fixture should be annotated as `os.PathLike[str]` and treated as opaque; convert to an `anyio.Path` (or `pathlib.Path`) when performing file operations (e.g. `repo = Path(tmp_path) / "foo"`). When passing the value into `parser.parse_args` or any APIs expecting a string, use `os.fspath(tmp_path)` instead of `str(...)` to satisfy strict type checks. This keeps the typing simple while still using the cross-platform AnyIO helpers for real I/O.
   - **Agent note:** the `vitest` CLI defaults to interactive/watch mode when invoked without a subcommand. Agents must use `vitest run <options>` or append `--run` so tests run non-interactively.
 - Python module exports:
   - Every Python module must declare a top-level `__all__` tuple (even if empty). Use a `tuple` (not a `list`).
