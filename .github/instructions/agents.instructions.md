@@ -59,7 +59,11 @@ This short guide contains focused rules and examples to help AI coding agents ma
     - Use `asyncer.asyncify()` to wrap blocking functions such as `subprocess.run` when calling them from async contexts; cast the returned value to a precise `CompletedProcess[...]` type and decode output strings to keep type checkers happy.
     - Convert entrypoint coroutines to sync callables with `asyncer.runnify()` rather than using `anyio.run` directly.  This allows tidy main‑block patterns and better editor hints.
     - Prefer `from asyncer import ...` imports instead of importing the module; the former provides clearer names and avoids needing `asyncer.` qualifiers.
-    - The combination of these utilities improves editor autocompletion, typing, and makes the code easier to reason about.  - When adding new dependencies or updating async logic, pin the `asyncer` version in `pyproject.toml` and update tests accordingly.
+    - The combination of these utilities improves editor autocompletion, typing, and makes the code easier to reason about.
+    - When adding new dependencies or updating async logic, pin the `asyncer` version in `pyproject.toml` and update tests accordingly.
+  - Testing asynchronous code
+    - All Python tests live under `tests/`; a single `tests/conftest.py` file configures the AnyIO plugin. It provides an `anyio_backend` fixture that returns a tuple ``("asyncio", {"use_uvloop": True})`` and automatically marks async tests with `pytest.mark.anyio`.
+    - This avoids any configuration flags (no `anyio_mode` is necessary); the tuple explicitly requests uvloop, and AnyIO will still choose an appropriate backend (e.g. winloop on Windows).
   - Existing repository tests (`tests/test_docstrings.py`, `tests/test_module_exports.py`) already check for docstrings and exports; add any new async helpers to those tests as needed.
 - Localization:
   - Add keys by editing `assets/locales/en/translation.json` first. Keep `{{...}}` and `$t(...)` intact and **do not** translate placeholders.

@@ -56,12 +56,13 @@ Notes:
 
 - **Async/AnyIO/Asyncer usage:**
   - The workspace uses AnyIO for async logic and `asyncer` for developer ergonomics. Utility scripts (e.g. under `scripts/`) should:
-- Use `asyncer.create_task_group()`/`.soonify()` for concurrency instead of `asyncio` constructs.  Declare `SoonValue[...]` variables explicitly and `assert` them after the task group to appease static analysis.
-  - Wrap blocking calls with `asyncer.asyncify()` and, if necessary, `cast()` the result to a precise `CompletedProcess[...]` type; convert outputs to `str` for logging.
-  - Convert coroutine entrypoints to sync functions with `asyncer.runnify()` instead of using `anyio.run` directly.
-  - Prefer `from asyncer import ...` syntax and avoid importing the module name itself.
-  - When adding or refactoring async code, pin the `asyncer` version in `pyproject.toml` (add a comment) and ensure tests run; update the pinned version alongside tests.
-    - These patterns give better editor autocomplete and type checking (mypy) while keeping code succinct.
+    - Use `asyncer.create_task_group()`/`.soonify()` for concurrency instead of `asyncio` constructs.  Declare `SoonValue[...]` variables explicitly and `assert` them after the task group to appease static analysis.
+    - Wrap blocking calls with `asyncer.asyncify()` and, if necessary, `cast()` the result to a precise `CompletedProcess[...]` type; convert outputs to `str` for logging.
+    - Convert coroutine entrypoints to sync functions with `asyncer.runnify()` instead of using `anyio.run` directly.
+    - Prefer `from asyncer import ...` syntax and avoid importing the module name itself.
+    - When adding or refactoring async code, pin the `asyncer` version in `pyproject.toml` (add a comment) and ensure tests run; update the pinned version alongside tests.
+      - These patterns give better editor autocomplete and type checking (mypy) while keeping code succinct.
+  - Async tests are configured via `tests/conftest.py`; it supplies an `anyio_backend` fixture returning a tuple ``("asyncio", {"use_uvloop": True})`` and automatically marks async tests. There’s no need for an `anyio_mode` option; the tuple requests uvloop explicitly while AnyIO still handles platform differences (winloop) automatically.
 
 ## 4. Integration points & shared packages
 
