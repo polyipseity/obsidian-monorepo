@@ -161,12 +161,18 @@ async def main(args: Arguments):
         soon_ncu = tg.soonify(which)("ncu")
         soon_npm = tg.soonify(_which2)("npm")
         soon_pnpm = tg.soonify(_which2)("pnpm")
-
     # the values are available once the task group exits
-    git = soon_git.value  # type: ignore[assignment]
-    ncu = soon_ncu.value  # type: ignore[assignment]
-    npm = soon_npm.value  # type: ignore[assignment]
-    pnpm = soon_pnpm.value  # type: ignore[assignment]
+    assert (
+        soon_git is not None
+        and soon_ncu is not None
+        and soon_npm is not None
+        and soon_pnpm is not None
+    )
+    git = soon_git.value
+    ncu = soon_ncu.value
+    npm = soon_npm.value
+    pnpm = soon_pnpm.value
+
     if ncu is None:
         await _exec(npm, "install", "--global", "npm-check-updates")
         ncu = await _which2("ncu")

@@ -206,11 +206,11 @@ async def test_main_performs_workflow_and_trims(
 
     # initially pretend ``which('ncu')`` returns None so the install branch
     # is exercised
-    async def _which(cmd: str) -> str | None:  # type: ignore[override]
+    async def _which(cmd: str) -> str | None:
         """Stubbed which that returns None for "ncu" and a path otherwise."""
         return None if cmd == "ncu" else "/usr/bin/" + cmd
 
-    async def _which2(cmd: str) -> str:  # type: ignore[override]
+    async def _which2(cmd: str) -> str:
         """Stubbed _which2 that always returns a fake path."""
         # the second call for ``ncu`` after installation should succeed
         return "/usr/bin/" + cmd
