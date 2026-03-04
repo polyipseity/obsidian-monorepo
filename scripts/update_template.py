@@ -23,13 +23,20 @@ from asyncer import SoonValue, create_task_group, runnify
 
 __all__ = ("Arguments", "parser", "main")
 
+"""Literal type describing the supported action strings for this script."""
 _ACTION_TYPES = Literal["continue", "update"]
+"""Tuple of supported action names in CLI order."""
 _ACTIONS: tuple[_ACTION_TYPES, ...] = "continue", "update"
+"""Name of the remote template branch used as the update source."""
 _BRANCH = "forks/polyipseity"
+"""HTTPS URL for the upstream plugin template repository."""
 _REMOTE_URL = "https://github.com/polyipseity/obsidian-plugin-template.git"
+"""Git commit message used for template merge/continue operations."""
 _GIT_MESSAGE = "chore(template): merge updates from template"
+"""Rolling tag name refreshed after each template update."""
 _GIT_TAG = "rolling"
 # limit concurrent subprocesses
+"""Capacity limiter controlling maximum concurrent subprocess executions."""
 _SUBPROCESS_SEMAPHORE = CapacityLimiter(cpu_count() or 4)
 
 

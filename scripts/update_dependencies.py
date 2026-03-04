@@ -25,10 +25,14 @@ from asyncer import SoonValue, create_task_group, runnify
 
 __all__ = ("Arguments", "parser", "main")
 
+"""Names of git-tracked manifest/lock files updated by this tool."""
 _GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
+"""Commit message used when recording dependency updates."""
 _GIT_MESSAGE = "Update dependencies"
+"""Rolling tag name pointing at the latest dependency update commit."""
 _GIT_TAG = "rolling"
-# Bound the number of concurrently running subprocesses
+# Bound the number of concurrently running subprocesses.
+"""Capacity limiter used to bound concurrent subprocess executions."""
 _SUBPROCESS_SEMAPHORE = CapacityLimiter(cpu_count() or 4)
 
 
