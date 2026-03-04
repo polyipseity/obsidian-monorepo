@@ -53,9 +53,12 @@ strictListInference = true
 strictSetInference = true
 
 [[tool.pyright.executionEnvironments]]
-extraPaths = ["."]
+extraPaths = ["src", "."]
 reportPrivateUsage = "none"
 root = "tests"
+
+[[tool.pyright.executionEnvironments]]
+root = "src"
 
 [[tool.pyright.executionEnvironments]]
 root = "."
