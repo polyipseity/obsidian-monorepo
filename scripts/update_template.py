@@ -46,7 +46,7 @@ _SUBPROCESS_SEMAPHORE = CapacityLimiter(cpu_count() or 4)
     slots=True,
 )
 class Arguments:
-    """Immutable container for the `update-template` script arguments.
+    """Immutable container for the `update_template` script arguments.
 
     Attributes
     ----------
@@ -213,7 +213,7 @@ async def main(args: Arguments):
 
 
 def parser(parent: Callable[..., ArgumentParser] | None = None):
-    """Create and return an `ArgumentParser` for the update-template tool.
+    """Create and return an `ArgumentParser` for the update_template tool.
 
     The parser defines the `action` and `inputs` CLI arguments and sets an
     async `invoke` function as the parser default so callers may `await

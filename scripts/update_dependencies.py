@@ -234,7 +234,7 @@ async def main(args: Arguments):
 def parser(parent: Callable[..., ArgumentParser] | None = None):
     """Create and return an `ArgumentParser` for the script.
 
-    The returned parser defines the CLI for `update-dependencies.py` and sets a
+    The returned parser defines the CLI for `update_dependencies.py` and sets a
     coroutine `invoke` as the parser default so callers can `await entry.invoke(entry)`.
 
     Parameters
