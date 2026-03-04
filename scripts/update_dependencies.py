@@ -293,12 +293,16 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
     return parser
 
 
-if __name__ == "__main__":
+def __main__() -> None:
+    """Configure logging, parse CLI arguments, and dispatch to the async `invoke` wrapper."""
     basicConfig(level=INFO)
     entry = parser().parse_args(argv[1:])
     # `asyncer.runnify` converts an async function into a normal callable
     # that runs the coroutine to completion on the current thread.  It uses
     # AnyIO under the hood just like ``run`` would, but it integrates better
     # with sync code and gives nicer typing support for editors.
-    run_sync = runnify(entry.invoke)
-    run_sync(entry)
+    runnify(entry.invoke, backend_options={"use_uvloop": True})(entry)
+
+
+if __name__ == "__main__":
+    __main__()

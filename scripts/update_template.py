@@ -273,11 +273,16 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
     return parser
 
 
-if __name__ == "__main__":
+def __main__() -> None:
+    """Configure logging, parse CLI arguments, and dispatch to the async `invoke` wrapper."""
+
     basicConfig(level=INFO)
     entry = parser().parse_args(argv[1:])
     # Use asyncer.runnify to call the async invoke wrapper from synchronous
     # startup code; this avoids the explicit `anyio.run` call and provides
     # better editor type hints.
-    run_sync = runnify(entry.invoke)
-    run_sync(entry)
+    runnify(entry.invoke, backend_options={"use_uvloop": True})(entry)
+
+
+if __name__ == "__main__":
+    __main__()
