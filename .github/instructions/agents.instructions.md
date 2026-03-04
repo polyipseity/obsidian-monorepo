@@ -52,6 +52,15 @@ This short guide contains focused rules and examples to help AI coding agents ma
 
   - When changing exports, update or add tests that assert the public surface (see `tests/test_module_exports.py`); add per-module export tests when appropriate.
   - Agent checklist: add `__all__`, remove underscore-only import aliases, run the Python export tests, and update any type annotations/usages affected by the import-name changes.
+
+- **Async/anyio/asyncer guidance:**
+  - New Python utilities are built around AnyIO and the small `asyncer` library. When writing or refactoring async code in `scripts/` or other helper modules:
+    - Prefer `asyncer.create_task_group()`/`.soonify()` to launch concurrent tasks and collect return values instead of custom `asyncio.gather` replacements.  Declare `SoonValue[...]` variables and `assert` them after the task group for static typing.
+    - Use `asyncer.asyncify()` to wrap blocking functions such as `subprocess.run` when calling them from async contexts; cast the returned value to a precise `CompletedProcess[...]` type and decode output strings to keep type checkers happy.
+    - Convert entrypoint coroutines to sync callables with `asyncer.runnify()` rather than using `anyio.run` directly.  This allows tidy main‑block patterns and better editor hints.
+    - Prefer `from asyncer import ...` imports instead of importing the module; the former provides clearer names and avoids needing `asyncer.` qualifiers.
+    - The combination of these utilities improves editor autocompletion, typing, and makes the code easier to reason about.  - When adding new dependencies or updating async logic, pin the `asyncer` version in `pyproject.toml` and update tests accordingly.
+  - Existing repository tests (`tests/test_docstrings.py`, `tests/test_module_exports.py`) already check for docstrings and exports; add any new async helpers to those tests as needed.
 - Localization:
   - Add keys by editing `assets/locales/en/translation.json` first. Keep `{{...}}` and `$t(...)` intact and **do not** translate placeholders.
   - Add a test when adding user-facing strings (or a localization note) so translators and CI can detect missing or bad keys.

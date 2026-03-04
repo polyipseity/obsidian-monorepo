@@ -9,26 +9,27 @@ Usage: run the included `parser()`/`invoke` entry point from a script
 invocation; see `main()` for the high-level workflow.
 """
 
+import subprocess
 from argparse import ONE_OR_MORE, ArgumentParser, Namespace
-from asyncio import BoundedSemaphore, create_subprocess_exec, create_task, gather, run
-from asyncio.subprocess import DEVNULL, PIPE
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from functools import partial, wraps
+from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
 from sys import argv, exit
 from typing import Any, final
 
 from aioshutil import which
-from anyio import Path
+from anyio import CapacityLimiter, Path, run_process
+from asyncer import SoonValue, create_task_group, runnify
 
 __all__ = ("Arguments", "parser", "main")
 
 _GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
 _GIT_MESSAGE = "Update dependencies"
 _GIT_TAG = "rolling"
-_SUBPROCESS_SEMAPHORE = BoundedSemaphore(cpu_count() or 4)
+# Bound the number of concurrently running subprocesses
+_SUBPROCESS_SEMAPHORE = CapacityLimiter(cpu_count() or 4)
 
 
 @final
@@ -80,21 +81,6 @@ async def _which2(cmd: str):
     This is a thin async wrapper around `aioshutil.which()` that converts a
     ``None`` result into a `FileNotFoundError` so callers can handle a missing
     executable with normal exception semantics.
-
-    Parameters
-    ----------
-    cmd:
-        Command name to locate on PATH.
-
-    Returns
-    -------
-    str | Path
-        Absolute path to the executable as returned by `which()`.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the `cmd` is not found on PATH.
     """
     ret = await which(cmd)
     if ret is None:
@@ -102,46 +88,38 @@ async def _which2(cmd: str):
     return ret
 
 
-@wraps(create_subprocess_exec)
+# we now use anyio.run_process directly (async); no wrapper needed.
+
+
+@wraps(which)
 async def _exec(*args: Any, **kwargs: Any):
     """Run a subprocess with bounded concurrency, log output, and raise on error.
 
-    The helper acquires a module-level semaphore to limit the number of
-    concurrently executing child processes. `stdout`/`stderr` are captured,
-    decoded, and emitted to the logger; a non-zero exit code raises
-    `ChildProcessError` (return code, stderr).
-
-    Parameters
-    ----------
-    *args, **kwargs:
-        Forwarded to `asyncio.create_subprocess_exec()` (command and its
-        arguments; `cwd` and other kwargs are accepted).
-
-    Raises
-    ------
-    ChildProcessError
-        If the subprocess exits with a non-zero return code. The exception
-        contains the return code and the captured stderr text.
+    ``anyio.run_process`` provides a native async implementation and returns a
+    ``subprocess.CompletedProcess`` similar to the old blocking API.  We hold
+    the semaphore while the process runs to limit concurrency.
     """
     async with _SUBPROCESS_SEMAPHORE:
-        proc = await create_subprocess_exec(
-            *args,
-            stdin=DEVNULL,
-            stdout=PIPE,
-            stderr=PIPE,
+        cp = await run_process(
+            args,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
             **kwargs,
         )
-        stdout, stderr = await proc.communicate()
     stdout, stderr = (
-        stdout.decode(errors="ignore").strip(),
-        stderr.decode(errors="ignore").strip(),
+        cp.stdout.decode(errors="ignore").strip(),
+        cp.stderr.decode(errors="ignore").strip(),
     )
     if stdout:
         info(stdout)
     if stderr:
         error(stderr)
-    if proc.returncode:
-        raise ChildProcessError(proc.returncode, stderr)
+    if cp.returncode:
+        raise ChildProcessError(cp.returncode, stderr)
+    # expose the CompletedProcess result to callers.
+    return cp
 
 
 async def main(args: Arguments):
@@ -169,9 +147,22 @@ async def main(args: Arguments):
     BaseExceptionGroup
         When one or more repository update tasks failed.
     """
-    git, ncu, npm, pnpm = await gather(
-        _which2("git"), which("ncu"), _which2("npm"), _which2("pnpm")
-    )
+    # resolve required executables concurrently using asyncer.soonify
+    soon_git: SoonValue[str] | None = None
+    soon_ncu: SoonValue[str | None] | None = None
+    soon_npm: SoonValue[str] | None = None
+    soon_pnpm: SoonValue[str] | None = None
+    async with create_task_group() as tg:
+        soon_git = tg.soonify(_which2)("git")
+        soon_ncu = tg.soonify(which)("ncu")
+        soon_npm = tg.soonify(_which2)("npm")
+        soon_pnpm = tg.soonify(_which2)("pnpm")
+
+    # the values are available once the task group exits
+    git = soon_git.value  # type: ignore[assignment]
+    ncu = soon_ncu.value  # type: ignore[assignment]
+    npm = soon_npm.value  # type: ignore[assignment]
+    pnpm = soon_pnpm.value  # type: ignore[assignment]
     if ncu is None:
         await _exec(npm, "install", "--global", "npm-check-updates")
         ncu = await _which2("ncu")
@@ -201,22 +192,19 @@ async def main(args: Arguments):
             "--upgrade",
             cwd=path,
         )
-        await gather(
-            _exec(npm, "dedupe", "--package-lock-only", cwd=path),
-            _exec(pnpm, "dedupe", cwd=path),
-        )
+        # run the two dedupe subprocesses at the same time using asyncer
+        async with create_task_group() as tg:
+            tg.soonify(_exec)(npm, "dedupe", "--package-lock-only", cwd=path)
+            tg.soonify(_exec)(pnpm, "dedupe", cwd=path)
         async with await (path / "package-lock.json").open(
             "r+t", encoding="UTF-8", errors="strict", newline=None
         ) as packageLock:
             read = await packageLock.read()
-            seek = create_task(packageLock.seek(0))
-            try:
-                if (text := read.strip()) != read:
-                    await seek
-                    await packageLock.write(text)
-                    await packageLock.truncate()
-            finally:
-                seek.cancel()
+            # if trimming is needed, seek back to start and write
+            if (text := read.strip()) != read:
+                await packageLock.seek(0)
+                await packageLock.write(text)
+                await packageLock.truncate()
         await _exec(git, "add", *_GIT_FILES, cwd=path)
         await _exec(
             git,
@@ -230,11 +218,13 @@ async def main(args: Arguments):
             git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
         )
 
-    errors = tuple(
-        err
-        for err in await gather(*map(exec, args.inputs), return_exceptions=True)
-        if err
-    )
+    # launch all repository operations concurrently and collect any errors
+    soon_list: list[SoonValue[Any]] = []
+    async with create_task_group() as tg:
+        for path in args.inputs:
+            soon_list.append(tg.soonify(exec)(path))
+
+    errors = tuple(sv.value for sv in soon_list if isinstance(sv.value, BaseException))
     if errors:
         raise BaseExceptionGroup("", errors)
 
@@ -291,14 +281,13 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
         provided `inputs` to absolute `Path` objects (strict existence check)
         and constructs an `Arguments` instance that is forwarded to `main()`.
         """
-        await main(
-            Arguments(
-                filter=entry.filter,
-                inputs=await gather(
-                    *map(partial(Path.resolve, strict=True), entry.inputs)
-                ),
-            )
-        )
+        # concurrently resolve the supplied input paths
+        soon_list: list[SoonValue[Path]] = []
+        async with create_task_group() as tg:
+            for p in entry.inputs:
+                soon_list.append(tg.soonify(Path.resolve)(p, strict=True))
+        inputs = tuple(sv.value for sv in soon_list)
+        await main(Arguments(filter=entry.filter, inputs=inputs))
 
     parser.set_defaults(invoke=invoke)
     return parser
@@ -307,4 +296,9 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
 if __name__ == "__main__":
     basicConfig(level=INFO)
     entry = parser().parse_args(argv[1:])
-    run(entry.invoke(entry))
+    # `asyncer.runnify` converts an async function into a normal callable
+    # that runs the coroutine to completion on the current thread.  It uses
+    # AnyIO under the hood just like ``run`` would, but it integrates better
+    # with sync code and gives nicer typing support for editors.
+    run_sync = runnify(entry.invoke)
+    run_sync(entry)

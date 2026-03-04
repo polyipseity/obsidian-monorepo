@@ -7,19 +7,19 @@ or finish a previously staged template update by committing/tagging (`continue`)
 See `parser()` and `main()` for invocation details.
 """
 
+import subprocess
 from argparse import ONE_OR_MORE, ArgumentParser, Namespace
-from asyncio import BoundedSemaphore, create_subprocess_exec, gather, run
-from asyncio.subprocess import DEVNULL, PIPE
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from functools import partial, wraps
+from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
 from sys import argv, exit
 from typing import Any, Literal, final
 
 from aioshutil import which
-from anyio import Path
+from anyio import CapacityLimiter, Path, run_process
+from asyncer import SoonValue, create_task_group, runnify
 
 __all__ = ("Arguments", "parser", "main")
 
@@ -29,7 +29,8 @@ _BRANCH = "forks/polyipseity"
 _REMOTE_URL = "https://github.com/polyipseity/obsidian-plugin-template.git"
 _GIT_MESSAGE = "chore(template): merge updates from template"
 _GIT_TAG = "rolling"
-_SUBPROCESS_SEMAPHORE = BoundedSemaphore(cpu_count() or 4)
+# limit concurrent subprocesses
+_SUBPROCESS_SEMAPHORE = CapacityLimiter(cpu_count() or 4)
 
 
 @final
@@ -95,44 +96,37 @@ async def _which2(cmd: str):
     return ret
 
 
-@wraps(create_subprocess_exec)
 async def _exec(*args: Any, **kwargs: Any):
     """Run a subprocess with concurrency limiting and surface any errors.
 
-    The helper acquires a semaphore to bound parallel subprocess execution,
-    captures and logs stdout/stderr, and raises `ChildProcessError` when the
-    child process exits with a non-zero status.
-
-    Parameters
-    ----------
-    *args, **kwargs:
-        Forwarded to `asyncio.create_subprocess_exec()`; typical callers pass
-        the command/arguments plus optional `cwd`.
-
-    Raises
-    ------
-    ChildProcessError
-        If the child process exits with a non-zero return code.
+    ``anyio.run_process`` is a native async API that returns a
+    ``subprocess.CompletedProcess`` instance.  We simply call it while
+    holding the semaphore to avoid spawning too many concurrent worker tasks.
     """
     async with _SUBPROCESS_SEMAPHORE:
-        proc = await create_subprocess_exec(
-            *args,
-            stdin=DEVNULL,
-            stdout=PIPE,
-            stderr=PIPE,
+        # `run_process` expects a single sequence argument for the command
+        # rather than variadic args like subprocess.run.
+        cp = await run_process(
+            args,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
             **kwargs,
         )
-        stdout, stderr = await proc.communicate()
     stdout, stderr = (
-        stdout.decode(errors="ignore").strip(),
-        stderr.decode(errors="ignore").strip(),
+        cp.stdout.decode(errors="ignore").strip(),
+        cp.stderr.decode(errors="ignore").strip(),
     )
     if stdout:
         info(stdout)
     if stderr:
         error(stderr)
-    if proc.returncode:
-        raise ChildProcessError(proc.returncode, stderr)
+    if cp.returncode:
+        raise ChildProcessError(cp.returncode, stderr)
+    # return the underlying CompletedProcess so callers (and tests) can
+    # inspect stdout/returncode if desired.
+    return cp
 
 
 async def main(args: Arguments):
@@ -144,8 +138,8 @@ async def main(args: Arguments):
       the current branch, and refresh the rolling tag.
 
     For each repository the appropriate nested coroutine (`continue_` or
-    `update`) is executed concurrently via `asyncio.gather`. Any failures are
-    collected and re-raised as a `BaseExceptionGroup`.
+    `update`) is executed concurrently using asyncer.soonify. Any failures are
+    captured and re-raised as a `BaseExceptionGroup`.
 
     Parameters
     ----------
@@ -206,11 +200,12 @@ async def main(args: Arguments):
     else:
         raise TypeError(args.action)
 
-    errors = tuple(
-        err
-        for err in await gather(*map(action, args.inputs), return_exceptions=True)
-        if err
-    )
+    # execute all repository operations concurrently using soonify
+    soon_list: list[SoonValue[Any]] = []
+    async with create_task_group() as tg:
+        for path in args.inputs:
+            soon_list.append(tg.soonify(action)(path))
+    errors = tuple(sv.value for sv in soon_list if isinstance(sv.value, BaseException))
     if errors:
         raise BaseExceptionGroup("", errors)
 
@@ -266,14 +261,13 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
         Resolves `inputs` to absolute `Path` objects (strict existence check)
         and constructs an `Arguments` instance that is forwarded to `main()`.
         """
-        await main(
-            Arguments(
-                action=entry.action,
-                inputs=await gather(
-                    *map(partial(Path.resolve, strict=True), entry.inputs)
-                ),
-            )
-        )
+        # resolve input paths concurrently using soonify
+        soon_paths: list[SoonValue[Path]] = []
+        async with create_task_group() as tg:
+            for p in entry.inputs:
+                soon_paths.append(tg.soonify(Path.resolve)(p, strict=True))
+        inputs = tuple(sv.value for sv in soon_paths)
+        await main(Arguments(action=entry.action, inputs=inputs))
 
     parser.set_defaults(invoke=invoke)
     return parser
@@ -282,4 +276,8 @@ def parser(parent: Callable[..., ArgumentParser] | None = None):
 if __name__ == "__main__":
     basicConfig(level=INFO)
     entry = parser().parse_args(argv[1:])
-    run(entry.invoke(entry))
+    # Use asyncer.runnify to call the async invoke wrapper from synchronous
+    # startup code; this avoids the explicit `anyio.run` call and provides
+    # better editor type hints.
+    run_sync = runnify(entry.invoke)
+    run_sync(entry)

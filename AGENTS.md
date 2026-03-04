@@ -54,6 +54,15 @@ Notes:
   - Do **not** avoid exporting names by aliasing imports with leading underscores — remove such aliasing and rely on `__all__` to control exports. Update all references and type annotations accordingly.
   - When changing a module's public API, add or update tests (see `tests/test_module_exports.py`) to assert the expected exports.
 
+- **Async/AnyIO/Asyncer usage:**
+  - The workspace uses AnyIO for async logic and `asyncer` for developer ergonomics. Utility scripts (e.g. under `scripts/`) should:
+- Use `asyncer.create_task_group()`/`.soonify()` for concurrency instead of `asyncio` constructs.  Declare `SoonValue[...]` variables explicitly and `assert` them after the task group to appease static analysis.
+  - Wrap blocking calls with `asyncer.asyncify()` and, if necessary, `cast()` the result to a precise `CompletedProcess[...]` type; convert outputs to `str` for logging.
+  - Convert coroutine entrypoints to sync functions with `asyncer.runnify()` instead of using `anyio.run` directly.
+  - Prefer `from asyncer import ...` syntax and avoid importing the module name itself.
+  - When adding or refactoring async code, pin the `asyncer` version in `pyproject.toml` (add a comment) and ensure tests run; update the pinned version alongside tests.
+    - These patterns give better editor autocomplete and type checking (mypy) while keeping code succinct.
+
 ## 4. Integration points & shared packages
 
 - `ext.obsidian-api/` — Obsidian type definitions and helpers used by multiple packages.
