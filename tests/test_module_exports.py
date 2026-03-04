@@ -21,7 +21,7 @@ from anyio import Path
 
 __all__ = ()
 
-# keep ROOT as an anyio.Path instance (don't await resolve at import time)
+"""Repository root used by the __all__ compliance tests for path discovery."""
 ROOT = Path(".")
 
 
