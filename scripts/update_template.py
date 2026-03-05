@@ -21,6 +21,7 @@ from aioshutil import which
 from anyio import CapacityLimiter, Path, run_process
 from asyncer import SoonValue, create_task_group, runnify
 
+"""Public API of this script."""
 __all__ = ("Arguments", "parser", "main")
 
 """Literal type describing the supported action strings for this script."""

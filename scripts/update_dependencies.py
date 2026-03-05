@@ -23,6 +23,7 @@ from aioshutil import which
 from anyio import CapacityLimiter, Path, run_process
 from asyncer import SoonValue, create_task_group, runnify
 
+"""Public API of this script."""
 __all__ = ("Arguments", "parser", "main")
 
 """Names of git-tracked manifest/lock files updated by this tool."""

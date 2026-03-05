@@ -21,6 +21,7 @@ from pytest import LogCaptureFixture, MonkeyPatch
 
 from scripts import update_template
 
+"""Public API of this test module (empty)."""
 __all__ = ()
 
 
