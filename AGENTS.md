@@ -103,7 +103,7 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 
 ## 8. Copilot / Chat assistant examples 💬
 
-- Location: primary guidance is in `.github/instructions/copilot.instructions.md`; package-level `copilot.instructions.md` files may add repo-specific examples.
+- Location: primary guidance is in `.agents/instructions/copilot.instructions.md`; package-level `copilot.instructions.md` files may add repo-specific examples.
 - Response template (copy/paste): Summary; Changed files; Tests; Commands to run; Risk / Next steps.
 - Example — add failing unit test + fix:
   - Summary: Add failing test and minimal fix for the bug.
@@ -120,7 +120,7 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 
 ## 9. Linked instructions & resources
 
-- `.github/instructions/` — coding rules and per-topic instructions (TypeScript, localization, commit messages).
+- `.agents/instructions/` — coding rules and per-topic instructions (TypeScript, localization, commit messages).
 - Package `AGENTS.md` files listed above for package-level guidance.
 
 ---

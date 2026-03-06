@@ -3,7 +3,7 @@
 Summary
 
 - Follow `AGENTS.md` and the per-package `AGENTS.md` files first. This file provides a short, non-interactive assistant template and guardrails for automated agents and Copilot-like assistants.
-- Do NOT add a top-level `.github/copilot-instructions.md` in this repository; use `.github/instructions/copilot.instructions.md` or update `AGENTS.md` instead.
+- Do NOT add a top-level `.github/copilot-instructions.md` in this repository; use `.agents/instructions/copilot.instructions.md` or update `AGENTS.md` instead.
 
 Required behavior (short)
 
@@ -78,11 +78,11 @@ Suggested next agent-customizations (short)
 Where to edit vs where to add files
 
 - Small assistant guidance: update `AGENTS.md`.
-- Reusable assistant templates and rules: add/edit `.github/instructions/*.instructions.md` (this file).
+- Reusable assistant templates and rules: add/edit `.agents/instructions/*.instructions.md` (this file).
 
 If you'd like, I can:
 
-1) Add this file now to `.github/instructions/` (I will).
+1) Add this file now to `.agents/instructions/` (I will).
 2) Or add a short `Copilot` section to `AGENTS.md` instead.
 
 Choose 1 or 2.
