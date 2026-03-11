@@ -65,7 +65,10 @@ root = "."
 
 [tool.pytest.ini_options]
 addopts = ["--cov=./", "--cov-report=term-missing", "--dist=loadscope", "-n=auto", "--strict-markers"]
-testpaths = ["tests"]
+testpaths = [
+  ".agents/skills/**/tests_*",
+  "tests",
+]
 python_files = "test_*.py"
 
 [tool.ruff]

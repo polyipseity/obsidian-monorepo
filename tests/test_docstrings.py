@@ -13,7 +13,7 @@ that:
 """
 
 import ast
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
 
 import pytest
 from anyio import Path
@@ -21,25 +21,66 @@ from anyio import Path
 """Public API of this test module (empty: no symbols are exported)."""
 __all__ = ()
 
-"""Repository root used by the docstring compliance tests for path discovery."""
-ROOT = Path(".")
+"""Glob patterns relative to the repository root. Only files matching an
+include pattern and no exclude pattern are considered candidates."""
+_GLOB_SPEC = """
+.agents/skills/**/*.py
+src/**/*.py
+tests/**/*.py
+scripts/**/*.py
+"""
+
+
+def _iter_glob_patterns(spec: str) -> Iterator[tuple[str, bool]]:
+    """Parse a gitignore-style, multi-line glob specification.
+
+    The ``spec`` string is interpreted as a sequence of lines applied from
+    top to bottom. Empty lines and lines starting with ``#`` are ignored.
+    Lines beginning with ``!`` are treated as exclusions.  The function
+    yields ``(pattern, is_exclude)`` pairs in the original order.
+    """
+    for raw in spec.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        is_exclude = line.startswith("!")
+        pattern = line[1:] if is_exclude else line
+        if not pattern:
+            continue
+        yield pattern, is_exclude
 
 
 async def _find_py_files() -> list[Path]:
-    """Return a sorted list of Python file paths under `src/`, `tests/`, and `scripts/`.
+    """Return sorted Python file paths matching ``_GLOB_SPEC``.
 
-    Mirrors the traversal used by other repository checks.
+    The helper is intentionally very similar to ``_get_candidate_files`` in
+    :mod:`tests.test_git_executable` with the only difference being that this
+    function returns a list instead of yielding an iterator.  Keeping the
+    implementations in each file avoids a separate shared module and is fine
+    per the refactoring instructions.
     """
+    root = Path(__file__).parent.parent  # repo root
+    yielded: set[Path] = set()
+    result: list[Path] = []
 
-    files: list[Path] = []
+    async def _iter_files(pattern: str) -> AsyncIterator[Path]:
+        """Yield all files matching the given glob pattern, relative to the repo root."""
+        async for p in root.glob(pattern):
+            if await p.is_file():
+                yield p
 
-    async for path in (ROOT / "src").rglob("*.py"):
-        files.append(path)
-    async for path in (ROOT / "tests").rglob("*.py"):
-        files.append(path)
-    async for path in (ROOT / "scripts").rglob("*.py"):
-        files.append(path)
-    return sorted(files)
+    for pattern, is_exclude in _iter_glob_patterns(_GLOB_SPEC):
+        if is_exclude:
+            async for p in root.glob(pattern):
+                yielded.discard(p)
+                if p in result:
+                    result.remove(p)
+        else:
+            async for p in _iter_files(pattern):
+                if p not in yielded:
+                    yielded.add(p)
+                    result.append(p)
+    return sorted(result)
 
 
 def _extract_all_tuple(node: ast.Module) -> tuple[str, ...] | None:
