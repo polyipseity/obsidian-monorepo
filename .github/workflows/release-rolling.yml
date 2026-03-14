@@ -42,6 +42,9 @@ jobs:
           bun install --frozen-lockfile --ignore-scripts
           uv sync --locked --all-extras --dev
 
+      - name: Build project
+        run: bun run build
+
       - name: Pack release
         run: |
           bun pm pack --destination=.github
