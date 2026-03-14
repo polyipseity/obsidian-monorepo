@@ -14,8 +14,8 @@ const MD_GLOB_KEY = MD_FILE_GLOB;
  * operate on provided files), prefer invoking the underlying CLI directly so
  * lint-staged's file arguments are forwarded. Examples: `prettier --write`,
  * `markdownlint-cli2 --fix --no-globs`, `python -m scripts.format`,
- * `python -m ruff check --fix`. Avoid `pnpm run <script>` for commands that must
- * operate on the staged file list because `pnpm run` may not reliably forward
+ * `python -m ruff check --fix`. Avoid `bun run <script>` for commands that must
+ * operate on the staged file list because `bun run` may not reliably forward
  * arbitrary file arguments.
  *
  * Prefer invoking `uv run --locked` for reproducible, locked Python CLI runs when

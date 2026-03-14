@@ -1,9 +1,9 @@
 """Command-line helper to update dependencies across repositories.
 
-This module provides an asynchronous CLI that runs `npm-check-updates` (`ncu`),
-performs `npm`/`pnpm` dedupe operations, normalises `package-lock.json`, and
-creates signed git commits/tags for each repository supplied on the command
-line.
+This module provides an asynchronous CLI that runs `npm-check-updates` via
+`bun x -- npm-check-updates`, updates the lockfile for the repository's
+package manager (`bun.lock`), and creates signed git commits/tags for each
+repository supplied on the command line.
 
 Usage: run the included `parser()`/`invoke` entry point from a script
 invocation; see `main()` for the high-level workflow.
@@ -27,7 +27,7 @@ from asyncer import SoonValue, create_task_group, runnify
 __all__ = ("Arguments", "parser", "main")
 
 """Names of git-tracked manifest/lock files updated by this tool."""
-_GIT_FILES = "package-lock.json", "package.json", "pnpm-lock.yaml"
+_GIT_FILES = "bun.lock", "package.json"
 """Commit message used when recording dependency updates."""
 _GIT_MESSAGE = "Update dependencies"
 """Rolling tag name pointing at the latest dependency update commit."""
@@ -58,7 +58,7 @@ class Arguments:
     Attributes
     ----------
     filter:
-        Optional string passed to `npm-check-updates` (`ncu --filter`). When
+        Optional string passed to `npm-check-updates` (`--filter`). When
         `None` the update runs against all dependency types.
     inputs:
         Sequence of repository `Path` objects to operate on. The sequence is
@@ -130,13 +130,12 @@ async def _exec(*args: Any, **kwargs: Any):
 async def main(args: Arguments):
     """Update dependencies for each repository in `args.inputs`.
 
-    The function ensures required tooling is present (`git`, `npm`, `pnpm`, and
-    `ncu` / `npm-check-updates`). For each supplied repository path it runs the
+    The function ensures required tooling is present (`git` and `bun`). For
+    each supplied repository path it runs the
     following sequence:
 
-    - `ncu --upgrade` (optionally with `--filter`)
-    - `npm dedupe --package-lock-only` and `pnpm dedupe`
-    - normalise `package-lock.json` whitespace (trim and rewrite if needed)
+    - `bun x -- npm-check-updates --upgrade` (optionally with `--filter`)
+    - `bun install` to update the lockfile
     - `git add` then `git commit --gpg-sign` and create/force a signed tag
 
     Any subprocess failures raise `ChildProcessError`. If multiple repository
@@ -154,36 +153,17 @@ async def main(args: Arguments):
     """
     # resolve required executables concurrently using asyncer.soonify
     soon_git: SoonValue[str] | None = None
-    soon_ncu: SoonValue[str | None] | None = None
-    soon_npm: SoonValue[str] | None = None
-    soon_pnpm: SoonValue[str] | None = None
     async with create_task_group() as tg:
         soon_git = tg.soonify(_which2)("git")
-        soon_ncu = tg.soonify(which)("ncu")
-        soon_npm = tg.soonify(_which2)("npm")
-        soon_pnpm = tg.soonify(_which2)("pnpm")
     # the values are available once the task group exits
-    assert (
-        soon_git is not None
-        and soon_ncu is not None
-        and soon_npm is not None
-        and soon_pnpm is not None
-    )
+    assert soon_git is not None
     git = soon_git.value
-    ncu = soon_ncu.value
-    npm = soon_npm.value
-    pnpm = soon_pnpm.value
-
-    if ncu is None:
-        await _exec(npm, "install", "--global", "npm-check-updates")
-        ncu = await _which2("ncu")
 
     async def exec(path: Path):
         """Perform the dependency update workflow for a single `path`.
 
-        The coroutine runs `ncu --upgrade` (respecting `args.filter`), runs
-        package-lock/pnpm dedupe operations, normalises the `package-lock.json`
-        file by trimming surrounding whitespace, and then stages/commits/tags
+        The coroutine runs `bun x -- npm-check-updates --upgrade` (respecting `args.filter`), runs
+        `bun install` to update `bun.lock`, and then stages/commits/tags
         the changes in `git` with a signed commit and tag.
 
         Parameters
@@ -197,25 +177,20 @@ async def main(args: Arguments):
             If any subprocess invoked by the workflow exits with a non-zero
             return code.
         """
+        # Run npm-check-updates via bun; this avoids needing an installed ncu binary.
         await _exec(
-            ncu,
+            "bun",
+            "x",
+            "--",
+            "npm-check-updates",
             *() if args.filter is None else ("--filter", args.filter),
             "--upgrade",
             cwd=path,
         )
-        # run the two dedupe subprocesses at the same time using asyncer
-        async with create_task_group() as tg:
-            tg.soonify(_exec)(npm, "dedupe", "--package-lock-only", cwd=path)
-            tg.soonify(_exec)(pnpm, "dedupe", cwd=path)
-        async with await (path / "package-lock.json").open(
-            "r+t", encoding="UTF-8", errors="strict", newline=None
-        ) as packageLock:
-            read = await packageLock.read()
-            # if trimming is needed, seek back to start and write
-            if (text := read.strip()) != read:
-                await packageLock.seek(0)
-                await packageLock.write(text)
-                await packageLock.truncate()
+
+        # Update the bun lockfile.
+        await _exec("bun", "install", cwd=path)
+
         await _exec(git, "add", *_GIT_FILES, cwd=path)
         await _exec(
             git,

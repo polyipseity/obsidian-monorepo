@@ -87,7 +87,7 @@ async def test_which2_translates_none(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.setattr(update_dependencies, "which", _no)
     with pytest.raises(FileNotFoundError):
-        await update_dependencies._which2("ncu")
+        await update_dependencies._which2("git")
 
 
 @pytest.mark.anyio
@@ -183,18 +183,16 @@ async def test_main_performs_workflow_and_trims(
 
     The test verifies that:
 
-    * ``ncu`` is invoked with ``--filter`` when ``filter`` is supplied.
-    * ``npm install --global npm-check-updates`` branch is taken when the
-      initial lookup returns ``None``.
-    * ``package-lock.json`` contents are trimmed if they contain leading or
-      trailing whitespace.
+    * ``npm-check-updates`` is invoked with ``--filter`` when ``filter`` is supplied.
+    * The `bun x -- npm-check-updates` command is invoked.
+    * ``bun install`` is invoked to update `bun.lock`.
     * ``git add``, ``git commit`` and ``git tag`` calls occur with the
       expected arguments.
     """
 
     repo = Path(tmp_path) / "r"
     await repo.mkdir()
-    await (repo / "package-lock.json").write_text("   hello  \n")
+    await (repo / "bun.lock").write_text("   hello  \n")
 
     # each record is (args tuple, kwargs dict)
     calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
@@ -205,15 +203,13 @@ async def test_main_performs_workflow_and_trims(
         calls.append((args, kwargs))
         return _DummyCP()
 
-    # initially pretend ``which('ncu')`` returns None so the install branch
-    # is exercised
+    # pretend ``which('git')`` returns a valid path
     async def _which(cmd: str) -> str | None:
-        """Stubbed which that returns None for "ncu" and a path otherwise."""
-        return None if cmd == "ncu" else "/usr/bin/" + cmd
+        """Stubbed which that returns a path for git and None otherwise."""
+        return "/usr/bin/" + cmd if cmd == "git" else None
 
     async def _which2(cmd: str) -> str:
         """Stubbed _which2 that always returns a fake path."""
-        # the second call for ``ncu`` after installation should succeed
         return "/usr/bin/" + cmd
 
     monkeypatch.setattr(update_dependencies, "_exec", _fake_exec)
@@ -226,17 +222,15 @@ async def test_main_performs_workflow_and_trims(
         await update_dependencies.main(args)
     assert se.value.code == 0
 
-    # the lock file should have been trimmed
-    assert await (repo / "package-lock.json").read_text() == "hello"
+    # the workflow should have invoked bun install to update the lockfile
+    assert any(call[0][0] == "bun" and call[0][1] == "install" for call in calls)
 
-    # the first call should be the ncu upgrade invocation with filter
-    assert any(isinstance(call[0][0], str) and "ncu" in call[0][0] for call in calls)
-    assert any("--filter" in call[0] for call in calls)
-
-    # ensure the install-global-ncu branch happened
+    # the first call should be the npm-check-updates invocation via bun x
     assert any(
-        call[0][1] == "install" and "npm-check-updates" in call[0] for call in calls
+        call[0][0] == "bun" and call[0][1] == "x" and "npm-check-updates" in call[0]
+        for call in calls
     )
+    assert any("--filter" in call[0] for call in calls)
 
     # verify git commit/tag were recorded last
     assert any("commit" in cmd for cmd, _ in calls)

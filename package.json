@@ -42,29 +42,27 @@
   "license": "AGPL-3.0-or-later",
   "name": "@polyipseity/obsidian-monorepo",
   "overrides": {},
-  "pnpm": {
-    "overrides": {}
-  },
+  "packageManager": "bun@1.3.10",
   "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/polyipseity/obsidian-monorepo.git"
   },
   "scripts": {
-    "build": "npm run check && npm run build:force",
-    "build:dev": "npm run build:force -- dev",
+    "build": "bun run check && bun run build:force",
+    "build:dev": "bun run build:force -- dev",
     "build:force": "node -e \"console.log('No build step')\"",
-    "check": "npm run check:md && npm run check:prettier && npm run check:py",
+    "check": "bun run check:md && bun run check:prettier && bun run check:py",
     "check:md": "markdownlint-cli2",
     "check:prettier": "prettier --cache --check \"**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}\"",
     "check:py": "uv run --locked ruff check && uv run --locked ruff format --check && pyright",
     "commitlint": "commitlint --from=origin/main --to=HEAD",
-    "format": "npm run format:md && npm run format:prettier && npm run format:py",
+    "format": "bun run format:md && bun run format:prettier && bun run format:py",
     "format:md": "markdownlint-cli2 --fix",
     "format:prettier": "prettier --cache --write \"**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}\"",
     "format:py": "uv run --locked ruff check --fix && uv run --locked ruff format && pyright",
     "prepare": "uv sync --all-extras --dev && husky",
-    "test": "npm run test:py && npm run test:vitest",
+    "test": "bun run test:py && bun run test:vitest",
     "test:py": "uv run --locked pytest",
     "test:vitest": "vitest run --coverage",
     "test:watch": "vitest"

@@ -14,11 +14,11 @@ This file is the workspace-level instructions for AI coding agents working acros
 
 ## 2. Developer workflows (workspace-level)
 
-- **Preferred package manager:** `pnpm` (workspace-aware). Use `npm` only if `pnpm` is unavailable.
-- **Workspace install:** `pnpm install` (run at repository root).
-- **Build:** run package-local build scripts (e.g., `pnpm --filter <package> build`) or the workspace helper `pnpm -w build` where provided.
-- **Testing:** run tests per-package (recommended) or the full suite from root with `pnpm -w test`.
-- **CI:** use `pnpm install --frozen-lockfile` in CI for deterministic installs.
+- **Preferred package manager:** `bun` (workspace-aware).
+- **Workspace install:** `bun install` (run at repository root).
+- **Build:** run package-local build scripts (e.g., `bun run build`) or the workspace helper `bun run build` where provided.
+- **Testing:** run tests per-package (recommended) or the full suite from root with `bun run test`.
+- **CI:** use `bun install --frozen-lockfile` in CI for deterministic installs.
 
 Notes:
 
@@ -29,17 +29,17 @@ Notes:
 
 ## Scripts & common commands 🔧
 
-- Use `pnpm -w` for workspace-level operations and `pnpm --filter <pkg>` for package-scoped runs.
+- Use `bun install` in the workspace root for dependency installs, and change into a package directory for package-scoped commands (e.g., `bun run test`).
 - Common package scripts (found in package `package.json` files): `build`, `dev`, `test`, `check`, `format`, `obsidian:install` (package-specific).
-- Lint & format: `pnpm -w run check` / `pnpm -w run format`.
+- Lint & format: `bun run check` / `bun run format`.
 
-> Tip: Use `pnpm --filter <pkg> test -- <pattern>` for iterative test runs in a single package.
+> Tip: Use `bun run test -- --run --watch` (or change into the package and run `bun run test`) for iterative test runs in a single package.
 
 ## Testing conventions (workspace)
 
 - **Runner:** Vitest across packages.
 - **File conventions:** `*.spec.*` = unit; `*.test.*` = integration. Keep the semantic distinction.
-- **Per-package tests:** Prefer running tests inside the package (use `pnpm --filter <pkg> test`).
+- **Per-package tests:** Prefer running tests inside each package (e.g., `cd <package> && bun run test`).
 - **Agent requirement:** Never run `vitest` in watch mode in automated agents — use `vitest run` or `--run`.
 
 ---
@@ -47,7 +47,7 @@ Notes:
 ## 3. Coding conventions (applies across workspace)
 
 - TypeScript rules: avoid `any`, avoid `as` casts, prefer `interface` for object shapes, and add runtime type guards when needed.
-- Commit messages: follow Conventional Commits; run `npm run commitlint` or `pnpm -w run commitlint` before pushing.
+- Commit messages: follow Conventional Commits; run `bun run commitlint` before pushing.
 - Python modules & `__all__`:
   - Every Python module must declare a top-level `__all__` tuple (even if empty). Use a `tuple` (not a `list`) and place the assignment immediately after top-level imports.
   - `__all__` must list the public API (functions, classes, constants). Internal helpers should remain named with a leading underscore or omitted from `__all__`.
@@ -96,8 +96,8 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 1. Read this root `AGENTS.md` first for workspace-wide rules.  
 2. Open the target package's `AGENTS.md` next for package-specific guidance.  
 3. Add tests first for behavioral changes and follow the one-test-file-per-source-file convention.  
-4. Run package-scoped tests with `pnpm --filter <pkg> test` during development.  
-5. Use `pnpm -w test` for the full workspace run in CI.
+4. Run package-scoped tests by changing into the package directory and running `bun run test` during development.  
+5. Use `bun run test` (from the workspace root) for the full workspace run in CI.
 
 ---
 
@@ -108,12 +108,11 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 - Example — add failing unit test + fix:
   - Summary: Add failing test and minimal fix for the bug.
   - Changed files: `src/foo.ts`, `tests/foo.spec.ts`
-  - Commands: `pnpm --filter <pkg> test -- --run`
+  - Commands: `bun run test -- --run`
 - Example — add i18n key + UI change:
   - Summary: Add `syncNow` key and update UI to use it.
   - Changed files: `assets/locales/en/translation.json`, `src/components/SyncButton.tsx`
-  - Commands: `pnpm -w test`
-- Refusal text (exact): `Sorry, I can't assist with that.`
+  - Commands: `bun run test`
 - When to ask clarifying questions: ambiguous requirements, multiple valid approaches, or public API/settings changes.
 
 ---
@@ -122,12 +121,3 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 
 - `.agents/instructions/` — coding rules and per-topic instructions (TypeScript, localization, commit messages).
 - Package `AGENTS.md` files listed above for package-level guidance.
-
----
-
-If you want, I can also:
-
-- add or sync missing package `AGENTS.md` files, or
-- add a short summary table listing each package and its purpose.
-
-Which of those should I do next?
