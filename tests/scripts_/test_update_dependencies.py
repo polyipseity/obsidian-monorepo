@@ -252,10 +252,13 @@ async def test_main_error_grouping(
     await repo1.mkdir()
     await repo2.mkdir()
 
+    calls: list[Path] = []
+
     async def _broken_exec(*args: object, **kwargs: object):
         """Exec stub that raises an error for the first repo and succeeds otherwise."""
-        # fail for the first repository only
         cwd = kwargs.get("cwd")
+        if isinstance(cwd, Path):
+            calls.append(cwd)
         if cwd == repo1:
             raise ChildProcessError(1, "oops")
         return _DummyCP()
@@ -274,3 +277,7 @@ async def test_main_error_grouping(
     with pytest.raises(BaseExceptionGroup) as ei:
         await update_dependencies.main(args)
     assert any(isinstance(e, ChildProcessError) for e in ei.value.exceptions)
+
+    # Both repositories should have been processed; one failure must not cancel the other.
+    assert repo1 in calls
+    assert repo2 in calls

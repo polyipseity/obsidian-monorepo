@@ -233,9 +233,14 @@ async def test_main_error_grouping(
     await repo1.mkdir()
     await repo2.mkdir()
 
+    calls: list[Path] = []
+
     async def broken_exec(*args: object, **kwargs: object):
         """Stub for _exec that fails when run in the first repo and succeeds otherwise."""
-        if kwargs.get("cwd") == repo1:
+        cwd = kwargs.get("cwd")
+        if isinstance(cwd, Path):
+            calls.append(cwd)
+        if cwd == repo1:
             raise ChildProcessError(2, "nope")
         return _DummyCP()
 
@@ -252,3 +257,7 @@ async def test_main_error_grouping(
             update_template.Arguments(action="continue", inputs=[repo1, repo2])
         )
     assert any(isinstance(e, ChildProcessError) for e in excinfo.value.exceptions)
+
+    # Ensure the second repository still proceeds even if the first fails.
+    assert repo1 in calls
+    assert repo2 in calls

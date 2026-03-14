@@ -9,11 +9,13 @@ See `parser()` and `main()` for invocation details.
 
 import subprocess
 from argparse import ONE_OR_MORE, ArgumentParser, Namespace
+from asyncio import CancelledError
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
+from subprocess import CompletedProcess
 from sys import argv, exit
 from typing import Any, Literal, final
 
@@ -104,11 +106,11 @@ async def _which2(cmd: str):
     return ret
 
 
-async def _exec(*args: Any, **kwargs: Any):
+async def _exec(*args: Any, **kwargs: Any) -> CompletedProcess[bytes]:
     """Run a subprocess with concurrency limiting and surface any errors.
 
     ``anyio.run_process`` is a native async API that returns a
-    ``subprocess.CompletedProcess`` instance.  We simply call it while
+    ``CompletedProcess`` instance.  We simply call it while
     holding the semaphore to avoid spawning too many concurrent worker tasks.
     """
     async with _SUBPROCESS_SEMAPHORE:
@@ -167,18 +169,31 @@ async def main(args: Arguments):
         This coroutine performs a signed commit with the configured message and
         then force-updates a signed `rolling` tag in the repository.
         """
-        await _exec(
-            git,
-            "commit",
-            "--gpg-sign",
-            "--message",
-            _GIT_MESSAGE,
-            "--no-edit",
-            cwd=path,
-        )
-        await _exec(
-            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
-        )
+        try:
+            await _exec(
+                git,
+                "commit",
+                "--gpg-sign",
+                "--message",
+                _GIT_MESSAGE,
+                "--no-edit",
+                cwd=path,
+            )
+            await _exec(
+                git,
+                "tag",
+                "--force",
+                "--message",
+                _GIT_TAG,
+                "--sign",
+                _GIT_TAG,
+                cwd=path,
+            )
+        except BaseException as exc:
+            if isinstance(exc, CancelledError):
+                # propagate cancellations immediately to avoid unnecessary work.
+                raise
+            return exc
 
     async def update(path: Path):
         """Fetch the upstream template branch and merge it into `path`.
@@ -187,19 +202,29 @@ async def main(args: Arguments):
         `FETCH_HEAD` with a signed merge commit using the configured message,
         then updates the `rolling` tag.
         """
-        await _exec(git, "fetch", _REMOTE_URL, _BRANCH, cwd=path)
-        await _exec(
-            git,
-            "merge",
-            "--gpg-sign",
-            "--message",
-            _GIT_MESSAGE,
-            "FETCH_HEAD",
-            cwd=path,
-        )
-        await _exec(
-            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
-        )
+        try:
+            await _exec(git, "fetch", _REMOTE_URL, _BRANCH, cwd=path)
+            await _exec(
+                git,
+                "merge",
+                "--gpg-sign",
+                "--message",
+                _GIT_MESSAGE,
+                "FETCH_HEAD",
+                cwd=path,
+            )
+            await _exec(
+                git,
+                "tag",
+                "--force",
+                "--message",
+                _GIT_TAG,
+                "--sign",
+                _GIT_TAG,
+                cwd=path,
+            )
+        except BaseException as exc:
+            return exc
 
     if args.action == "continue":
         action = continue_
@@ -209,7 +234,7 @@ async def main(args: Arguments):
         raise TypeError(args.action)
 
     # execute all repository operations concurrently using soonify
-    soon_list: list[SoonValue[Any]] = []
+    soon_list: list[SoonValue[None | BaseException]] = []
     async with create_task_group() as tg:
         for path in args.inputs:
             soon_list.append(tg.soonify(action)(path))

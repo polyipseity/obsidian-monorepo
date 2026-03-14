@@ -11,11 +11,13 @@ invocation; see `main()` for the high-level workflow.
 
 import subprocess
 from argparse import ONE_OR_MORE, ArgumentParser, Namespace
+from asyncio import CancelledError
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
+from subprocess import CompletedProcess
 from sys import argv, exit
 from typing import Any, final
 
@@ -97,11 +99,11 @@ async def _which2(cmd: str):
 
 
 @wraps(which)
-async def _exec(*args: Any, **kwargs: Any):
+async def _exec(*args: Any, **kwargs: Any) -> CompletedProcess[bytes]:
     """Run a subprocess with bounded concurrency, log output, and raise on error.
 
     ``anyio.run_process`` provides a native async implementation and returns a
-    ``subprocess.CompletedProcess`` similar to the old blocking API.  We hold
+    ``CompletedProcess`` similar to the old blocking API.  We hold
     the semaphore while the process runs to limit concurrency.
     """
     async with _SUBPROCESS_SEMAPHORE:
@@ -177,35 +179,48 @@ async def main(args: Arguments):
             If any subprocess invoked by the workflow exits with a non-zero
             return code.
         """
-        # Run npm-check-updates via bun; this avoids needing an installed ncu binary.
-        await _exec(
-            "bun",
-            "x",
-            "--",
-            "npm-check-updates",
-            *() if args.filter is None else ("--filter", args.filter),
-            "--upgrade",
-            cwd=path,
-        )
+        try:
+            # Run npm-check-updates via bun; this avoids needing an installed ncu binary.
+            await _exec(
+                "bun",
+                "x",
+                "--",
+                "npm-check-updates",
+                *() if args.filter is None else ("--filter", args.filter),
+                "--upgrade",
+                cwd=path,
+            )
 
-        # Update the bun lockfile.
-        await _exec("bun", "install", cwd=path)
+            # Update the bun lockfile.
+            await _exec("bun", "install", cwd=path)
 
-        await _exec(git, "add", *_GIT_FILES, cwd=path)
-        await _exec(
-            git,
-            "commit",
-            "--gpg-sign",
-            "--message",
-            _GIT_MESSAGE,
-            cwd=path,
-        )
-        await _exec(
-            git, "tag", "--force", "--message", _GIT_TAG, "--sign", _GIT_TAG, cwd=path
-        )
+            await _exec(git, "add", *_GIT_FILES, cwd=path)
+            await _exec(
+                git,
+                "commit",
+                "--gpg-sign",
+                "--message",
+                _GIT_MESSAGE,
+                cwd=path,
+            )
+            await _exec(
+                git,
+                "tag",
+                "--force",
+                "--message",
+                _GIT_TAG,
+                "--sign",
+                _GIT_TAG,
+                cwd=path,
+            )
+        except BaseException as exc:
+            if isinstance(exc, CancelledError):
+                # propagate cancellations immediately to avoid unnecessary work.
+                raise
+            return exc
 
     # launch all repository operations concurrently and collect any errors
-    soon_list: list[SoonValue[Any]] = []
+    soon_list: list[SoonValue[None | BaseException]] = []
     async with create_task_group() as tg:
         for path in args.inputs:
             soon_list.append(tg.soonify(exec)(path))
