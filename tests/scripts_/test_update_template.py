@@ -52,11 +52,11 @@ async def test_which2_and_exec_behaviour(
 ) -> None:
     """Verify that the helpers behave correctly in both success and failure cases."""
 
-    async def yes(cmd: str) -> str | None:  # pragma: no cover
+    def yes(cmd: str) -> str | None:  # pragma: no cover
         """Stub returning a fake path for any command success case."""
         return f"/foo/{cmd}"
 
-    async def no(cmd: str) -> None:  # pragma: no cover
+    def no(cmd: str) -> None:  # pragma: no cover
         """Stub simulating absence of a command by returning None."""
         return None
 

@@ -15,13 +15,15 @@ from dataclasses import dataclass
 from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
+from shutil import which as _sync_which
 from subprocess import CompletedProcess
 from sys import argv, exit
 from typing import Any, Literal, final
 
-from aioshutil import which
 from anyio import CapacityLimiter, Path, run_process
-from asyncer import SoonValue, create_task_group, runnify
+from asyncer import SoonValue, asyncify, create_task_group, runnify
+
+which = _sync_which
 
 """Public API of this script."""
 __all__ = ("Arguments", "parser", "main")
@@ -83,24 +85,8 @@ class Arguments:
 
 @wraps(which)
 async def _which2(cmd: str):
-    """Async wrapper for `aioshutil.which()` that raises when the command is missing.
-
-    Parameters
-    ----------
-    cmd:
-        Command name to locate on PATH.
-
-    Returns
-    -------
-    str | Path
-        Absolute path to the located executable.
-
-    Raises
-    ------
-    FileNotFoundError
-        If the command cannot be found on PATH.
-    """
-    ret = await which(cmd)
+    """Async wrapper for ``shutil.which()`` that raises when the command is missing."""
+    ret = await asyncify(which)(cmd)
     if ret is None:
         raise FileNotFoundError(cmd)
     return ret

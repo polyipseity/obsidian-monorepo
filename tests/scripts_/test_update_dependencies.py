@@ -68,17 +68,17 @@ class _DummyCP:
 
 @pytest.mark.anyio
 async def test_which2_translates_none(monkeypatch: MonkeyPatch) -> None:
-    """``_which2`` wraps ``aioshutil.which`` and raises when missing.
+    """``_which2`` wraps ``shutil.which`` and raises when missing.
 
     We patch the imported ``which`` in the module and drive both return
     branches.
     """
 
-    async def _yes(cmd: str) -> str | None:  # pragma: no cover - simple stub
+    def _yes(cmd: str) -> str | None:  # pragma: no cover - simple stub
         """Stub which returns a fake path for any command."""
         return "/usr/bin/" + cmd
 
-    async def _no(cmd: str) -> None:  # pragma: no cover - simple stub
+    def _no(cmd: str) -> None:  # pragma: no cover - simple stub
         """Stub which simulates a missing command by returning None."""
         return None
 

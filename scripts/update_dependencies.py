@@ -17,13 +17,15 @@ from dataclasses import dataclass
 from functools import wraps
 from logging import INFO, basicConfig, error, info
 from os import cpu_count
+from shutil import which as _sync_which
 from subprocess import CompletedProcess
 from sys import argv, exit
 from typing import Any, final
 
-from aioshutil import which
 from anyio import CapacityLimiter, Path, run_process
-from asyncer import SoonValue, create_task_group, runnify
+from asyncer import SoonValue, asyncify, create_task_group, runnify
+
+which = _sync_which
 
 """Public API of this script."""
 __all__ = ("Arguments", "parser", "main")
@@ -85,11 +87,11 @@ class Arguments:
 async def _which2(cmd: str):
     """Locate `cmd` in PATH and raise if it cannot be found.
 
-    This is a thin async wrapper around `aioshutil.which()` that converts a
+    This is a thin async wrapper around ``shutil.which()`` that converts a
     ``None`` result into a `FileNotFoundError` so callers can handle a missing
     executable with normal exception semantics.
     """
-    ret = await which(cmd)
+    ret = await asyncify(which)(cmd)
     if ret is None:
         raise FileNotFoundError(cmd)
     return ret
@@ -98,7 +100,6 @@ async def _which2(cmd: str):
 # we now use anyio.run_process directly (async); no wrapper needed.
 
 
-@wraps(which)
 async def _exec(*args: Any, **kwargs: Any) -> CompletedProcess[bytes]:
     """Run a subprocess with bounded concurrency, log output, and raise on error.
 
