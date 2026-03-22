@@ -37,6 +37,7 @@ exclude = [
   "**/__pycache__",
   "**/.*",
   ".venv",
+  # self
   # These contain their own pyright configurations, and are not intended to be type-checked as part of this project.
   "obsidian-terminal",
 ]
