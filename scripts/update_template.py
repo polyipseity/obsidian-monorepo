@@ -23,6 +23,7 @@ from typing import Any, Literal, final
 from anyio import CapacityLimiter, Path, run_process
 from asyncer import SoonValue, asyncify, create_task_group, runnify
 
+"""Alias of shutil.which used by async wrapper functions in this module."""
 which = _sync_which
 
 """Public API of this script."""
