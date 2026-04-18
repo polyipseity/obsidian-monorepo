@@ -28,10 +28,10 @@ export default {
   "**/*.{astro,cjs,css,csv,gql,graphql,hbs,html,js,jsx,json,json5,jsonc,jsonl,less,mjs,pcss,sass,scss,svelte,styl,ts,tsx,vue,xml,yaml,yml}":
     ["prettier --write"],
   "**/*.{py,pyi,pyw,pyx}": [
-    // Run pyright and each Python formatter as its own command so lint-staged appends
-    // the staged file list to each invocation (pyright, ruff).
-    "pyright",
+    // Run ruff and ty as its own command so lint-staged appends
+    // the staged file list to each invocation.
     "uv run --locked ruff check --fix",
     "uv run --locked ruff format",
+    "uv run --locked ty check",
   ],
 };

@@ -27,6 +27,7 @@
 - Run unit tests only: `bun x vitest run "**/*.spec.*" --run`
 - Run integration tests only: `bun x vitest run "**/*.test.*" --run`
 - Check & format: `bun run check` / `bun run format`
+- Python type check: `uv run --locked ty check`
 - Python tests: `uv run --locked pytest`
 
 ## Guardrails / repository rules
@@ -48,7 +49,7 @@
 
 ## Example prompts & ideal short replies (2 examples)
 
-1) Prompt: "Add `maxItems` validation to `src/settings.ts` and tests."
+1. Prompt: "Add `maxItems` validation to `src/settings.ts` and tests."
    Ideal reply (short):
    - Summary: Add `maxItems` validation and unit tests.
    - Changed files: `src/settings.ts`, `tests/settings.spec.ts`
@@ -56,7 +57,7 @@
    - Commands to run: `bun run test -- --run` (from the package directory)
    - Risk: Low — small validation logic only.
 
-2) Prompt: "Localize new button label `Sync now`."
+2. Prompt: "Localize new button label `Sync now`."
    Ideal reply (short):
    - Summary: Add `syncNow` i18n key and update component.
    - Changed files: `assets/locales/en/translation.json`, `src/components/SyncButton.tsx`

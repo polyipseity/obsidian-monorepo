@@ -4,7 +4,7 @@ This file is the workspace-level instructions for AI coding agents working acros
 
 ## What changed
 
-- This document is now the *workspace* guide (root-level). Package-specific rules remain in each package's `AGENTS.md` (see list below).  
+- This document is now the _workspace_ guide (root-level). Package-specific rules remain in each package's `AGENTS.md` (see list below).
 - Keep package-level patterns (build, test, localization) but prefer workspace-wide commands and CI conventions.
 
 ## 1. Workspace overview
@@ -54,15 +54,23 @@ Notes:
   - Do **not** avoid exporting names by aliasing imports with leading underscores — remove such aliasing and rely on `__all__` to control exports. Update all references and type annotations accordingly.
   - When changing a module's public API, add or update tests (see `tests/test_module_exports.py`) to assert the expected exports.
 
+- **Python type checking (Ty):**
+  - Use `Ty` for all Python type checking. It is configured in `[tool.ty]` section of `pyproject.toml`.
+  - Run type checks with `uv run --locked ty check`.
+  - Ty is automatically configured to use the Python version from `requires-python` in `pyproject.toml`.
+  - Configuration is in `[tool.ty.src]` (include/exclude paths), `[tool.ty.environment]` (extra paths, platform), and `[tool.ty.rules]` (type checking rules).
+  - All type checking rules should be set to "error" - never downgrade to warnings.
+  - When adding new Python dependencies, ensure type stubs are available or add `# type: ignore` comments where appropriate.
+
 - **Async/AnyIO/Asyncer usage:**
   - The workspace uses AnyIO for async logic and `asyncer` for developer ergonomics. Utility scripts (e.g. under `scripts/`) should:
-    - Use `asyncer.create_task_group()`/`.soonify()` for concurrency instead of `asyncio` constructs.  Declare `SoonValue[...]` variables explicitly and `assert` them after the task group to appease static analysis.
+    - Use `asyncer.create_task_group()`/`.soonify()` for concurrency instead of `asyncio` constructs. Declare `SoonValue[...]` variables explicitly and `assert` them after the task group to appease static analysis.
     - Wrap blocking calls with `asyncer.asyncify()` and, if necessary, `cast()` the result to a precise `CompletedProcess[...]` type; convert outputs to `str` for logging.
     - Convert coroutine entrypoints to sync functions with `asyncer.runnify()` instead of using `anyio.run` directly.
     - Prefer `from asyncer import ...` syntax and avoid importing the module name itself.
     - When adding or refactoring async code, pin the `asyncer` version in `pyproject.toml` (add a comment) and ensure tests run; update the pinned version alongside tests.
-      - These patterns give better editor autocomplete and type checking (mypy) while keeping code succinct.
-  - Async tests are configured via `tests/conftest.py`; it supplies an `anyio_backend` fixture returning a tuple ``("asyncio", {"use_uvloop": True})`` and automatically marks async tests. There’s no need for an `anyio_mode` option; the tuple requests uvloop explicitly while AnyIO still handles platform differences (winloop) automatically.
+      - These patterns give better editor autocomplete and type checking (Ty) while keeping code succinct.
+  - Async tests are configured via `tests/conftest.py`; it supplies an `anyio_backend` fixture returning a tuple `("asyncio", {"use_uvloop": True})` and automatically marks async tests. There’s no need for an `anyio_mode` option; the tuple requests uvloop explicitly while AnyIO still handles platform differences (winloop) automatically.
 
 ## 4. Integration points & shared packages
 
@@ -93,10 +101,10 @@ Open the package `AGENTS.md` for package-level conventions and examples (tests, 
 
 ## 7. For AI Coding Agents — quick checklist 🤖
 
-1. Read this root `AGENTS.md` first for workspace-wide rules.  
-2. Open the target package's `AGENTS.md` next for package-specific guidance.  
-3. Add tests first for behavioral changes and follow the one-test-file-per-source-file convention.  
-4. Run package-scoped tests by changing into the package directory and running `bun run test` during development.  
+1. Read this root `AGENTS.md` first for workspace-wide rules.
+2. Open the target package's `AGENTS.md` next for package-specific guidance.
+3. Add tests first for behavioral changes and follow the one-test-file-per-source-file convention.
+4. Run package-scoped tests by changing into the package directory and running `bun run test` during development.
 5. Use `bun run test` (from the workspace root) for the full workspace run in CI.
 
 ---
