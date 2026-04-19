@@ -117,7 +117,7 @@ async def test_top_level_scripts_executable() -> None:
         try:
             st = await entry.stat()
             is_exec = bool(st.st_mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH))
-        except (OSError, IncompleteRead):
+        except OSError, IncompleteRead:
             is_exec = False
 
         git_mode_str: str | None = await git_mode(entry)
