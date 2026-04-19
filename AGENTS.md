@@ -60,7 +60,7 @@ Notes:
   - Ty is automatically configured to use the Python version from `requires-python` in `pyproject.toml`.
   - Configuration is in `[tool.ty.src]` (include/exclude paths), `[tool.ty.environment]` (extra paths, platform), and `[tool.ty.rules]` (type checking rules).
   - All type checking rules should be set to "error" - never downgrade to warnings.
-  - When adding new Python dependencies, ensure type stubs are available or add `# type: ignore` comments where appropriate.
+  - When adding new Python dependencies, ensure type stubs are available.
 
 - **Async/AnyIO/Asyncer usage:**
   - The workspace uses AnyIO for async logic and `asyncer` for developer ergonomics. Utility scripts (e.g. under `scripts/`) should:
