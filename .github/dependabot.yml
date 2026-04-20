@@ -16,6 +16,10 @@ updates:
       bun:
         patterns:
           - "*"
+      bun-security:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
 
   # GitHub Actions (workflow dependencies)
   - package-ecosystem: "github-actions"
@@ -28,6 +32,10 @@ updates:
       include: "scope"
     groups:
       github-actions:
+        patterns:
+          - "*"
+      github-actions-security:
+        applies-to: "security-updates"
         patterns:
           - "*"
 
@@ -44,6 +52,10 @@ updates:
       gitsubmodule:
         patterns:
           - "*"
+      gitsubmodule-security:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
 
   # Python (pyproject.toml)
   - package-ecosystem: "uv"
@@ -56,6 +68,10 @@ updates:
       include: "scope"
     groups:
       uv:
+        patterns:
+          - "*"
+      uv-security:
+        applies-to: "security-updates"
         patterns:
           - "*"
     exclude-paths:
