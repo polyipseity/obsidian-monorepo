@@ -147,7 +147,7 @@ wheels = [
 [[package]]
 name = "obsidian-monorepo-0a620499-365c-4586-b77a-7a226ce0ed3e"
 version = "0.0.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "anyio" },
     { name = "asyncer" },
