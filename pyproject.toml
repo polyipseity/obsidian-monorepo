@@ -12,6 +12,10 @@ readme = "README.md"
 dependencies = [
   "anyio>=4.12.0",
   "asyncer>=0.0.17",
+]
+
+[project.optional-dependencies]
+uvloop = [
   "uvloop>=0.22.0; platform_system != 'Windows'",
   "winloop>=0.5.0; platform_system == 'Windows'",
 ]
@@ -30,6 +34,9 @@ dev = [
   "pytest-xdist>=3.8.0",
   "ruff>=0.15.0",
   "ty>=0.0.31",
+]
+uvloop = [
+  "obsidian-monorepo-0a620499-365c-4586-b77a-7a226ce0ed3e[uvloop]",
 ]
 
 [tool.pytest.ini_options]
@@ -69,6 +76,7 @@ exclude = [
 ]
 
 [tool.uv]
+default-groups = ["dev", "uvloop"]
 package = false
 required-version = ">=0.9.0,<0.11.0"
 
