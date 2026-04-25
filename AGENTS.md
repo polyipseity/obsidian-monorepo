@@ -72,6 +72,8 @@ Notes:
       - These patterns give better editor autocomplete and type checking (Ty) while keeping code succinct.
   - Async tests are configured via `tests/conftest.py`; it supplies an `anyio_backend` fixture returning a tuple `("asyncio", {"use_uvloop": True})` and automatically marks async tests. There’s no need for an `anyio_mode` option; the tuple requests uvloop explicitly while AnyIO still handles platform differences (winloop) automatically.
 
+  - Python environment / `uv` usage: The workspace configures `tool.uv.default-groups` to include `dev` and `uvloop`, so running `uv sync` will install development dependencies and platform-specific event-loop extras (uvloop on Unix, winloop on Windows) by default. Agents and contributors should run `uv sync` locally (CI should use `uv sync --locked`). Do not pass `--all-extras` or `--dev` to `uv sync` anymore.
+
 ## 4. Integration points & shared packages
 
 - `ext.obsidian-api/` — Obsidian type definitions and helpers used by multiple packages.
