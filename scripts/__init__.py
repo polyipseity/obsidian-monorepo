@@ -3,3 +3,6 @@
 Contains utility scripts for managing dependencies, templates, and
 automated maintenance tasks for the Obsidian plugin ecosystem.
 """
+
+"""Public API of this module (empty)."""
+__all__ = ()
