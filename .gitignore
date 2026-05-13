@@ -1,3 +1,15 @@
+# https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Nix.gitignore {
+# Ignore build outputs from performing a nix-build or `nix build` command
+result
+result-*
+
+# Ignore automatically generated direnv output
+.direnv
+
+# Ignore NixOS interactive test driver history
+**/.nixos-test-history
+# }
+
 # <https://github.com/github/gitignore/blob/1d4e709db80b4481888076b1f256a7e87eb84105/Node.gitignore> {
 # Logs
 logs
@@ -301,5 +313,6 @@ cython_debug/
 /data.json
 /main.js
 /metafile.json
+/package.json.bak
 /styles.css
 # }
