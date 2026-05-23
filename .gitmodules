@@ -2,10 +2,6 @@
 	path = ext.obsidian-api
 	url = ../ext.obsidian-api.git
 	branch = forks/polyipseity
-[submodule "ext.obsidian-releases"]
-	path = ext.obsidian-releases
-	url = ../ext.obsidian-releases.git
-	branch = master
 [submodule "obsidian-modules"]
 	path = obsidian-modules
 	url = ../obsidian-modules.git

@@ -9,10 +9,7 @@ requires-python = ">=3.14.0"
 description = "Obsidian Monorepo"
 license = { file = "LICENSE.txt" }
 readme = "README.md"
-dependencies = [
-  "anyio>=4.12.0",
-  "asyncer>=0.0.17",
-]
+dependencies = ["anyio>=4.12.0", "asyncer>=0.0.17"]
 
 [project.optional-dependencies]
 uvloop = [
@@ -35,9 +32,7 @@ dev = [
   "ruff>=0.15.0",
   "ty>=0.0.31",
 ]
-uvloop = [
-  "obsidian-monorepo-0a620499-365c-4586-b77a-7a226ce0ed3e[uvloop]",
-]
+uvloop = ["obsidian-monorepo-0a620499-365c-4586-b77a-7a226ce0ed3e[uvloop]"]
 
 [tool.pytest.ini_options]
 addopts = [
@@ -78,7 +73,7 @@ exclude = [
 [tool.uv]
 default-groups = ["dev", "uvloop"]
 package = false
-required-version = ">=0.9.0,<0.11.0"
+required-version = ">=0.11.0"
 
 [tool.uv.build-backend]
 # Do not include any packages in the build, as this project is only a collection of tools and scripts.
