@@ -1,4 +1,4 @@
-# https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/Linux.gitignore {
+# <https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/Linux.gitignore> {
 *~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -17,7 +17,7 @@
 nohup.out
 # }
 
-# https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/Windows.gitignore {
+# <https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/Windows.gitignore> {
 # Windows thumbnail cache files
 Thumbs.db
 Thumbs.db:encryptable
@@ -44,7 +44,7 @@ $RECYCLE.BIN/
 *.lnk
 # }
 
-# https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/macOS.gitignore {
+# <https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Global/macOS.gitignore> {
 # General
 .DS_Store
 .localized
@@ -104,7 +104,7 @@ MobileBackups.trash
 tmbootpicker.efi
 # }
 
-# https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Nix.gitignore {
+# <https://github.com/github/gitignore/blob/1046d8fba6b42d367da6314c934cddb6bfe5662e/Nix.gitignore> {
 # Ignore build outputs from performing a nix-build or `nix build` command
 result
 result-*
