@@ -5,7 +5,8 @@ version: 2
 updates:
   # Bun (bun.lock)
   - package-ecosystem: "bun"
-    directory: "/"
+    directories:
+      - "**/*"
     schedule:
       interval: "monthly"
     commit-message:
@@ -25,7 +26,8 @@ updates:
 
   # GitHub Actions (workflow dependencies)
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "**/*"
     schedule:
       interval: "monthly"
     commit-message:
@@ -45,7 +47,8 @@ updates:
 
   # Git submodules (gitmodules)
   - package-ecosystem: "gitsubmodule"
-    directory: "/"
+    directories:
+      - "**/*"
     schedule:
       interval: "monthly"
     commit-message:
@@ -65,7 +68,8 @@ updates:
 
   # Python (pyproject.toml)
   - package-ecosystem: "uv"
-    directory: "/"
+    directories:
+      - "**/*"
     schedule:
       interval: "monthly"
     commit-message:
